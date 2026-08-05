@@ -1,3 +1,4 @@
+import GalleryModal from "./GalleryModal";
 import { useState } from "react";
 
 import GallerySearch from "./GallerySearch";
@@ -9,6 +10,7 @@ import galleryData from "../data/galleryData";
 export default function GallerySection() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedArtwork, setSelectedArtwork] = useState(null);
 
   const filteredArtworks = galleryData.filter((artwork) => {
     const matchesCategory =
@@ -34,7 +36,16 @@ export default function GallerySection() {
         onCategoryChange={setSelectedCategory}
       />
 
-      <GalleryGrid artworks={filteredArtworks} />
+      <GalleryGrid artworks={filteredArtworks}
+        onViewDetails={setSelectedArtwork}
+        />
+      <GalleryModal
+  artwork={selectedArtwork}
+  artworks={filteredArtworks}
+  onClose={() => setSelectedArtwork(null)}
+  onChangeArtwork={setSelectedArtwork}
+/>
+
     </>
   );
 }
