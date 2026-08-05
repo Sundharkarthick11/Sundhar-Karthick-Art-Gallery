@@ -1,11 +1,10 @@
-import GallerySearch from "../features/gallery/components/GallerySearch";
-import GalleryGrid from "../features/gallery/components/GalleryGrid";
+import GallerySection from "../features/gallery/components/GallerySection";
 
 export default function Gallery() {
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-slate-950 text-white">
       <section className="py-16 text-center">
-        <h1 className="text-5xl font-bold text-white">
+        <h1 className="text-5xl font-bold">
           Our <span className="text-amber-400">Gallery</span>
         </h1>
 
@@ -14,9 +13,7 @@ export default function Gallery() {
         </p>
       </section>
 
-      <GallerySearch />
-
-      <GalleryGrid />
+      <GallerySection />
     </div>
   );
 }
