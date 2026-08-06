@@ -1,9 +1,289 @@
+import axios from "axios";
 import { useState } from "react";
 export default function OrderPortrait() {
+  
   const [previewImage, setPreviewImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [artworkType, setArtworkType] = useState("");
 const [paperSize, setPaperSize] = useState("");
 const [peopleCount, setPeopleCount] = useState("1");
+const [isSubmitted, setIsSubmitted] = useState(false);
+const [formData, setFormData] = useState({
+  customerName: "",
+  email: "",
+  phone: "",
+  notes: "",
+});
+const [errors, setErrors] = useState({});
+const [acceptedTerms, setAcceptedTerms] = useState(false);
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  // Full Name
+  if (name === "customerName") {
+    if (!/^[A-Za-z ]*$/.test(value)) return;
+  }
+
+  // Phone
+  if (name === "phone") {
+    if (!/^\d*$/.test(value)) return;
+
+    if (value.length > 10) return;
+  }
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+
+  setErrors((prev) => ({
+    ...prev,
+    [name]: "",
+  }));
+};
+const validateForm = () => {
+  const newErrors = {};
+
+  // ===========================
+  // Full Name
+  // ===========================
+  if (!formData.customerName.trim()) {
+    newErrors.customerName = "Please enter your full name.";
+  } else if (formData.customerName.trim().length < 3) {
+    newErrors.customerName =
+      "Name should be at least 3 characters long.";
+  } else if (!/^[A-Za-z ]+$/.test(formData.customerName)) {
+    newErrors.customerName =
+      "Name should contain only letters and spaces.";
+  }
+
+  // ===========================
+  // Email
+  // ===========================
+  if (!formData.email.trim()) {
+    newErrors.email = "Please enter your email address.";
+  } else if (
+    !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(
+      formData.email
+    )
+  ) {
+    newErrors.email =
+      "Please enter a valid email address.";
+  }
+
+  // ===========================
+  // Phone Number
+  // ===========================
+  if (!formData.phone.trim()) {
+    newErrors.phone = "Please enter your phone number.";
+  } else if (!/^\d+$/.test(formData.phone)) {
+    newErrors.phone =
+      "Phone number should contain only digits.";
+  } else if (formData.phone.length !== 10) {
+    newErrors.phone =
+      "Phone number must be exactly 10 digits.";
+  } else if (!/^[6-9]/.test(formData.phone)) {
+    newErrors.phone =
+      "Phone number must start with 6, 7, 8, or 9.";
+  }
+
+  // ===========================
+  // Artwork Type
+  // ===========================
+  if (!artworkType) {
+    newErrors.artworkType =
+      "Please select an artwork type.";
+  }
+
+  // ===========================
+  // Paper Size
+  // ===========================
+  if (!paperSize) {
+    newErrors.paperSize =
+      "Please select a paper size.";
+  }
+
+  // ===========================
+  // Number of People
+  // ===========================
+  if (!peopleCount) {
+    newErrors.peopleCount =
+      "Please select the number of people.";
+  }
+
+  // ===========================
+  // Reference Image
+  // ===========================
+  if (!previewImage) {
+    newErrors.image =
+      "Please upload a reference image.";
+  }
+
+  // ===========================
+  // Terms & Conditions
+  // ===========================
+  if (!acceptedTerms) {
+    newErrors.terms =
+      "Please accept the Terms & Conditions to continue.";
+  }
+
+  setErrors(newErrors);
+
+  return Object.keys(newErrors).length === 0;
+};
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!validateForm()) {
+    return;
+  }
+  let imageUrl = "";
+  console.log("Step 1 - Uploading image...");
+
+try {
+  const imageData = new FormData();
+
+  imageData.append("file", selectedFile);
+  imageData.append(
+    "upload_preset",
+    "sundhar_gallery_orders"
+  );
+
+  const upload = await axios.post(
+    "https://api.cloudinary.com/v1_1/cjep3tky/image/upload",
+    imageData
+  );
+
+  imageUrl = upload.data.secure_url;
+  console.log("Step 2 - Image uploaded");
+  console.log("Step 3 - Creating Razorpay Order...");
+  const paymentResponse = await fetch(
+  "http://localhost:5000/api/payment/create-order",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount: advanceAmount,
+    }),
+  }
+);
+
+const paymentData = await paymentResponse.json();
+console.log("Step 4 - Razorpay Order Created", paymentData);
+if (!paymentData.success) {
+  alert("Unable to create payment.");
+  return;
+}
+
+
+const options = {
+  key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+  amount: paymentData.order.amount,
+
+  currency: paymentData.order.currency,
+
+  name: "Sundhar Karthick Art Gallery",
+
+  description: "Portrait Booking Advance",
+
+  image: "/logo.png", // optional
+
+  order_id: paymentData.order.id,
+
+  handler: async function (response) {
+
+    console.log("Payment Success:", response);
+
+    alert("Payment Successful!");
+
+  },
+
+  prefill: {
+    name: formData.customerName,
+    email: formData.email,
+    contact: formData.phone,
+  },
+
+  theme: {
+    color: "#f59e0b",
+  },
+};
+console.log("Step 5 - Opening Razorpay...");
+
+const razorpay = new window.Razorpay(options);
+
+razorpay.open();
+
+return;
+
+
+} catch (err) {
+  console.error(err);
+
+  alert("Failed to upload image.");
+
+  return;
+}
+
+
+
+  const orderData = {
+    customerName: formData.customerName,
+    email: formData.email,
+    phone: formData.phone,
+
+    artworkType,
+    paperSize,
+    peopleCount: Number(peopleCount),
+
+    estimatedPrice: totalPrice,
+    advanceAmount,
+    balanceAmount,
+
+    imageUrl,
+    notes: formData.notes,
+  };
+
+  try {
+    const response = await fetch("http://localhost:5000/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert("✅ Order submitted successfully!");
+
+      setFormData({
+        customerName: "",
+        email: "",
+        phone: "",
+        notes: "",
+      });
+
+      setArtworkType("");
+      setPaperSize("");
+      setPeopleCount("1");
+      setPreviewImage(null);
+      setAcceptedTerms(false);
+      setErrors({});
+      setIsSubmitted(true);
+    } else {
+      alert("❌ Failed to submit order.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("❌ Server Error");
+  }
+};
+
 const pricing = {
   "Pencil Drawing": {
     A5: 500,
@@ -97,10 +377,7 @@ const balanceAmount = totalPrice - advanceAmount;
 
 <form
   className="mt-8 space-y-6"
-  onSubmit={(e) => {
-    e.preventDefault();
-    alert("Order submitted successfully!");
-  }}
+  onSubmit={handleSubmit}
 >
 
   {/* Full Name */}
@@ -108,12 +385,24 @@ const balanceAmount = totalPrice - advanceAmount;
     <label className="mb-2 block text-sm font-medium">
       Full Name
     </label>
+<input
+  type="text"
+  name="customerName"
+  value={formData.customerName}
+  onChange={handleChange}
+  placeholder="Enter your full name"
+  className={`w-full rounded-lg bg-slate-800 px-4 py-3 text-white outline-none ${
+    errors.customerName
+      ? "border border-red-500"
+      : "border border-slate-700 focus:border-amber-400"
+  }`}
+/>
 
-    <input
-      type="text"
-      placeholder="Enter your full name"
-      className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
-    />
+{errors.customerName && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.customerName}
+  </p>
+)}
   </div>
 
   {/* Email */}
@@ -123,10 +412,23 @@ const balanceAmount = totalPrice - advanceAmount;
     </label>
 
     <input
-      type="email"
-      placeholder="Enter your email"
-      className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
-    />
+  type="email"
+  name="email"
+  value={formData.email}
+  onChange={handleChange}
+  placeholder="Enter your email"
+  className={`w-full rounded-lg bg-slate-800 px-4 py-3 text-white outline-none ${
+    errors.email
+      ? "border border-red-500"
+      : "border border-slate-700 focus:border-amber-400"
+  }`}
+/>
+
+{errors.email && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.email}
+  </p>
+)}
   </div>
 
   {/* Phone */}
@@ -136,10 +438,23 @@ const balanceAmount = totalPrice - advanceAmount;
     </label>
 
     <input
-      type="tel"
-      placeholder="Enter your phone number"
-      className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
-    />
+  type="tel"
+  name="phone"
+  value={formData.phone}
+  onChange={handleChange}
+  placeholder="Enter your phone number"
+  className={`w-full rounded-lg bg-slate-800 px-4 py-3 text-white outline-none ${
+    errors.phone
+      ? "border border-red-500"
+      : "border border-slate-700 focus:border-amber-400"
+  }`}
+/>
+
+{errors.phone && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.phone}
+  </p>
+)}
   </div>
   {/* Artwork Details */}
 <div className="border-t border-slate-700 pt-6">
@@ -155,7 +470,14 @@ const balanceAmount = totalPrice - advanceAmount;
 
     <select
   value={artworkType}
-  onChange={(e) => setArtworkType(e.target.value)}
+  onChange={(e) => {
+  setArtworkType(e.target.value);
+
+  setErrors((prev) => ({
+    ...prev,
+    artworkType: "",
+  }));
+}}
   className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
 >
   <option value="">Select Artwork Type</option>
@@ -165,6 +487,11 @@ const balanceAmount = totalPrice - advanceAmount;
   <option value="Acrylic Painting">Acrylic Painting</option>
   <option value="Digital Art">Digital Art</option>
 </select>
+{errors.artworkType && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.artworkType}
+  </p>
+)}
   </div>
 
   {/* Paper Size */}
@@ -175,7 +502,14 @@ const balanceAmount = totalPrice - advanceAmount;
 
     <select
   value={paperSize}
-  onChange={(e) => setPaperSize(e.target.value)}
+  onChange={(e) => {
+  setPaperSize(e.target.value);
+
+  setErrors((prev) => ({
+    ...prev,
+    paperSize: "",
+  }));
+}}
   className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
 >
   <option value="">Select Paper Size</option>
@@ -184,6 +518,11 @@ const balanceAmount = totalPrice - advanceAmount;
   <option value="A3">A3</option>
   <option value="A2">A2</option>
 </select>
+{errors.paperSize && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.paperSize}
+  </p>
+)}
   </div>
 
   {/* Number of People */}
@@ -194,7 +533,14 @@ const balanceAmount = totalPrice - advanceAmount;
 
     <select
   value={peopleCount}
-  onChange={(e) => setPeopleCount(e.target.value)}
+  onChange={(e) => {
+  setPeopleCount(e.target.value);
+
+  setErrors((prev) => ({
+    ...prev,
+    peopleCount: "",
+  }));
+}}
   className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
 >
   <option value="1">1 Person</option>
@@ -203,6 +549,11 @@ const balanceAmount = totalPrice - advanceAmount;
   <option value="4">4 People</option>
   <option value="5">5+ People</option>
 </select>
+{errors.peopleCount && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.peopleCount}
+  </p>
+)}
   </div>
 </div>
 {/* Reference Image */}
@@ -219,14 +570,35 @@ const balanceAmount = totalPrice - advanceAmount;
   type="file"
   accept="image/*"
   onChange={(e) => {
-    const file = e.target.files[0];
+  const file = e.target.files[0];
 
-    if (file) {
-      setPreviewImage(URL.createObjectURL(file));
-    }
-  }}
+  if (!file) return;
+
+  // Allow only image files
+  if (!file.type.startsWith("image/")) {
+    setErrors((prev) => ({
+      ...prev,
+      image: "Please upload a valid image.",
+    }));
+    return;
+  }
+
+  setSelectedFile(file);
+
+  setPreviewImage(URL.createObjectURL(file));
+
+  setErrors((prev) => ({
+    ...prev,
+    image: "",
+  }));
+}}
   className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white file:mr-4 file:rounded-lg file:border-0 file:bg-amber-500 file:px-4 file:py-2 file:text-white hover:file:bg-amber-600"
 />
+{errors.image && (
+  <p className="mt-2 text-sm text-red-500">
+    {errors.image}
+  </p>
+)}
 {previewImage && (
   <div className="mt-6">
     <img
@@ -253,25 +625,42 @@ const balanceAmount = totalPrice - advanceAmount;
   </label>
 
   <textarea
-    rows="5"
-    placeholder="Mention background preferences, colors, delivery requests, or any other special instructions..."
-    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
-  ></textarea>
+  rows="5"
+  name="notes"
+  value={formData.notes}
+  onChange={handleChange}
+  placeholder="Mention background preferences, colors, delivery requests, or any other special instructions..."
+  className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
+/>
 </div>
 
 {/* Terms & Conditions */}
 <div className="border-t border-slate-700 pt-6">
   <label className="flex items-start gap-3 text-sm text-slate-300">
     <input
-      type="checkbox"
-      className="mt-1 h-5 w-5 accent-amber-500"
-    />
+  type="checkbox"
+  checked={acceptedTerms}
+  onChange={(e) => {
+  setAcceptedTerms(e.target.checked);
+
+  setErrors((prev) => ({
+    ...prev,
+    terms: "",
+  }));
+}}
+  className="mt-1 h-5 w-5 accent-amber-500"
+/>
 
     <span>
       I have read and agree to the pricing policy, advance payment
       requirements, and estimated delivery timeline.
     </span>
   </label>
+  {errors.terms && (
+  <p className="mt-2 text-sm text-red-500">
+    {errors.terms}
+  </p>
+)}
 </div>
 {/* Estimated Price */}
 <div className="rounded-xl border border-amber-500/30 bg-slate-800 p-6">
@@ -357,12 +746,18 @@ const balanceAmount = totalPrice - advanceAmount;
 {/* Submit Button */}
 <button
   type="submit"
-  className="w-full rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 py-4 text-lg font-semibold text-white transition hover:scale-[1.02]"
+  disabled={isSubmitted}
+  className={`w-full rounded-lg py-4 text-lg font-semibold text-white transition duration-300 ${
+    isSubmitted
+      ? "bg-green-600 cursor-not-allowed"
+      : "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:scale-[1.02]"
+  }`}
 >
-  Submit Order Request
+  {isSubmitted ? "✓ Order Submitted Successfully" : "Submit Order Request"}
 </button>
 
 </form>
+
             {/* Form fields will be added in the next step */}
           </div>
 
