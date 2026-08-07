@@ -138,6 +138,7 @@ const handleSubmit = async (e) => {
     return;
   }
   let imageUrl = "";
+  let publicId = "";
   console.log("Step 1 - Uploading image...");
 
 try {
@@ -155,6 +156,8 @@ try {
   );
 
   imageUrl = upload.data.secure_url;
+  publicId = upload.data.public_id; 
+  console.log("Cloudinary Public ID:", publicId);
   console.log("Step 2 - Image uploaded");
   console.log("Step 3 - Creating Razorpay Order...");
   const paymentResponse = await fetch(
@@ -195,11 +198,99 @@ const options = {
 
   handler: async function (response) {
 
-    console.log("Payment Success:", response);
+  console.log("Payment Success:", response);
 
-    alert("Payment Successful!");
+  // TODO:
+  // Payment verification will be added in the next step
 
+  const orderData = {
+    customerName: formData.customerName,
+    email: formData.email,
+    phone: formData.phone,
+
+    artworkType,
+    paperSize,
+    peopleCount: Number(peopleCount),
+
+    estimatedPrice: totalPrice,
+    advanceAmount,
+    balanceAmount,
+
+    imageUrl,
+    notes: formData.notes,
+
+    paymentStatus: "Paid",
+    paymentId: response.razorpay_payment_id,
+    orderStatus: "Pending",
+  };
+
+  try {
+
+    const saveResponse = await fetch(
+      "http://localhost:5000/api/orders",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      }
+    );
+
+    const data = await saveResponse.json();
+
+    if (data.success) {
+
+      alert("✅ Payment Successful! Order Confirmed.");
+
+      setFormData({
+        customerName: "",
+        email: "",
+        phone: "",
+        notes: "",
+      });
+
+      setArtworkType("");
+      setPaperSize("");
+      setPeopleCount("1");
+      setPreviewImage(null);
+      setSelectedFile(null);
+      setAcceptedTerms(false);
+      setErrors({});
+      setIsSubmitted(true);
+
+    } else {
+
+      alert("Failed to save order.");
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Server Error.");
+
+  }
+
+},
+  modal: {
+  ondismiss: async function () {
+    console.log("Payment cancelled.");
+
+    await fetch("http://localhost:5000/api/cloudinary/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        publicId,
+      }),
+    });
+
+    alert("Payment cancelled. Uploaded image deleted.");
   },
+},
 
   prefill: {
     name: formData.customerName,
@@ -228,61 +319,8 @@ return;
   return;
 }
 
-
-
-  const orderData = {
-    customerName: formData.customerName,
-    email: formData.email,
-    phone: formData.phone,
-
-    artworkType,
-    paperSize,
-    peopleCount: Number(peopleCount),
-
-    estimatedPrice: totalPrice,
-    advanceAmount,
-    balanceAmount,
-
-    imageUrl,
-    notes: formData.notes,
-  };
-
-  try {
-    const response = await fetch("http://localhost:5000/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(orderData),
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      alert("✅ Order submitted successfully!");
-
-      setFormData({
-        customerName: "",
-        email: "",
-        phone: "",
-        notes: "",
-      });
-
-      setArtworkType("");
-      setPaperSize("");
-      setPeopleCount("1");
-      setPreviewImage(null);
-      setAcceptedTerms(false);
-      setErrors({});
-      setIsSubmitted(true);
-    } else {
-      alert("❌ Failed to submit order.");
-    }
-  } catch (error) {
-    console.error(error);
-    alert("❌ Server Error");
-  }
 };
+
 
 const pricing = {
   "Pencil Drawing": {

@@ -1,5 +1,7 @@
 require("dotenv").config();
+
 const paymentRoutes = require("./routes/paymentRoutes");
+const cloudinaryRoutes = require("./routes/cloudinaryRoutes");
 const express = require("express");
 const cors = require("cors");
 
@@ -14,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/cloudinary", cloudinaryRoutes);
 
 app.get("/", (req, res) => {
   res.send("🎨 Sundhar Karthick Art Gallery API is Running...");
