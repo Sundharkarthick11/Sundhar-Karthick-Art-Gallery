@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import DashboardStats from "../components/Admin/DashboardStats";
 import OrderCard from "../components/Admin/OrderCard";
 import OrderDetailsModal from "../components/Admin/OrderDetailsModal";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -28,6 +32,11 @@ const AdminDashboard = () => {
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("adminToken");
+    navigate("/admin/login");
+  };
+
   const filteredOrders = useMemo(() => {
     return orders.filter((order) =>
       order.customerName
@@ -37,16 +46,31 @@ const AdminDashboard = () => {
   }, [orders, search]);
 
   return (
-    <div className="min-h-screen bg-[#111827] text-white p-8">
+    <div className="min-h-screen bg-gray-900 text-white px-6 py-8">
 
-      <h1 className="text-4xl font-bold text-amber-400">
-        Sundhar Karthick Art Gallery
-      </h1>
+      {/* Header */}
+      <div className="flex justify-between items-center">
 
-      <p className="text-gray-400 mt-2">
-        Admin Dashboard
-      </p>
+        <div>
+          <h1 className="text-4xl font-bold text-amber-400">
+            Sundhar Karthick Art Gallery
+          </h1>
 
+          <p className="text-gray-400 mt-2">
+            Admin Dashboard
+          </p>
+        </div>
+
+        <button
+          onClick={logout}
+          className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg text-white font-semibold transition"
+        >
+          Logout
+        </button>
+
+      </div>
+
+      {/* Search */}
       <div className="mt-8">
         <input
           type="text"
@@ -57,8 +81,10 @@ const AdminDashboard = () => {
         />
       </div>
 
+      {/* Dashboard Statistics */}
       <DashboardStats orders={orders} />
 
+      {/* Orders */}
       <div className="mt-10 space-y-6">
         {filteredOrders.length > 0 ? (
           filteredOrders.map((order) => (
@@ -76,6 +102,7 @@ const AdminDashboard = () => {
         )}
       </div>
 
+      {/* Order Details Modal */}
       {selectedOrder && (
         <OrderDetailsModal
           order={selectedOrder}

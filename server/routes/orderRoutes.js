@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const protect = require("../middleware/authMiddleware");
 
 const {
   createOrder,
@@ -24,12 +25,10 @@ router.get("/track/order/:orderId", trackOrderById);
 router.get("/track/:email", trackOrder);
 
 // Update Order Status
-router.put("/:id", updateOrderStatus);
+router.put("/:id", protect, updateOrderStatus);
 
-// Upload Completed Portrait
-router.put("/:id/upload", uploadCompletedPortrait);
+router.put("/:id/upload", protect, uploadCompletedPortrait);
 
-// Delete Order
-router.delete("/:id", deleteOrder);
+router.delete("/:id", protect, deleteOrder);
 
 module.exports = router;

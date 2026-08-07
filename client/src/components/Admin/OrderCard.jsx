@@ -13,61 +13,69 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
       : "bg-orange-500";
 
   const updateStatus = async (status) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/orders/${order._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            orderStatus: status,
-          }),
-        }
-      );
+  try {
+    const token = localStorage.getItem("adminToken");
 
-      const data = await response.json();
-
-      if (data.success) {
-        fetchOrders();
-      } else {
-        alert("Failed to update order.");
+    const response = await fetch(
+      `http://localhost:5000/api/orders/${order._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          orderStatus: status,
+        }),
       }
-    } catch (error) {
-      console.error(error);
-      alert("Server Error");
-    }
-  };
-
-  const deleteOrder = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this order?"
     );
 
-    if (!confirmDelete) return;
+    const data = await response.json();
 
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/orders/${order._id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert("Order deleted successfully.");
-        fetchOrders();
-      } else {
-        alert("Failed to delete order.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Server Error");
+    if (data.success) {
+      fetchOrders();
+    } else {
+      alert(data.message || "Failed to update order.");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Server Error");
+  }
+};
+
+  const deleteOrder = async () => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this order?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    const token = localStorage.getItem("adminToken");
+
+    const response = await fetch(
+      `http://localhost:5000/api/orders/${order._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert("Order deleted successfully.");
+      fetchOrders();
+    } else {
+      alert(data.message || "Failed to delete order.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Server Error");
+  }
+};
 
   // We'll implement this in the next step
  const uploadPortrait = async () => {
@@ -103,12 +111,15 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
       const completedImageUrl = upload.data.secure_url;
 
       console.log(completedImageUrl);
-      const response = await fetch(
+      const token = localStorage.getItem("adminToken");
+
+const response = await fetch(
   `http://localhost:5000/api/orders/${order._id}/upload`,
   {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       completedImageUrl,
@@ -120,11 +131,11 @@ const data = await response.json();
 
 if (data.success) {
   alert("Completed portrait uploaded successfully!");
-
   fetchOrders();
 } else {
-  alert("Failed to save portrait.");
+  alert(data.message || "Failed to save portrait.");
 }
+
 
     } catch (error) {
       console.error(error);
@@ -172,7 +183,7 @@ if (data.success) {
   </div>
 
 </div>
-<div className="mt-6"></div>
+
 
         <div className="flex-1">
             
@@ -196,13 +207,6 @@ if (data.success) {
   </p>
 </div>
 
-              <p className="text-gray-300 mt-1">
-                {order.email}
-              </p>
-
-              <p className="text-gray-300">
-                {order.phone}
-              </p>
             </div>
 
             <div className="flex flex-col gap-2">
