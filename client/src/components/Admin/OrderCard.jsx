@@ -178,9 +178,23 @@ if (data.success) {
             
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-2xl font-bold text-amber-400">
-                {order.customerName}
-              </h2>
+              <div>
+  <h2 className="text-2xl font-bold text-amber-400">
+    {order.customerName}
+  </h2>
+
+  <p className="text-sm text-gray-400 mt-1">
+    Order ID: {order.orderId}
+  </p>
+
+  <p className="text-gray-300 mt-2">
+    {order.email}
+  </p>
+
+  <p className="text-gray-300">
+    {order.phone}
+  </p>
+</div>
 
               <p className="text-gray-300 mt-1">
                 {order.email}

@@ -1,8 +1,61 @@
+const sendEmail = require("../utils/sendEmail");
+const Counter = require("../models/Counter");
 const Order = require("../models/Order");
 
+// CREATE ORDER
 const createOrder = async (req, res) => {
   try {
-    const order = await Order.create(req.body);
+    // Generate next sequence number atomically
+    const counter = await Counter.findOneAndUpdate(
+      { name: "order" },
+      { $inc: { sequence: 1 } },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+
+    const year = new Date().getFullYear();
+
+    const orderId = `SKA-${year}-${String(counter.sequence).padStart(5, "0")}`;
+
+    const order = await Order.create({
+      ...req.body,
+      orderId,
+    });
+    await sendEmail({
+  to: order.email,
+  subject: "🎉 Order Confirmation - Sundhar Karthick Art Gallery",
+  html: `
+    <h2>Thank you for your order!</h2>
+
+    <p>Hello <strong>${order.customerName}</strong>,</p>
+
+    <p>Your portrait order has been received successfully.</p>
+
+    <hr>
+
+    <p><strong>Order ID:</strong> ${order.orderId}</p>
+
+    <p><strong>Artwork:</strong> ${order.artworkType}</p>
+
+    <p><strong>Paper Size:</strong> ${order.paperSize}</p>
+
+    <p><strong>Estimated Price:</strong> ₹${order.estimatedPrice}</p>
+
+    <p><strong>Advance Paid:</strong> ₹${order.advanceAmount}</p>
+
+    <hr>
+
+    <p>You can track your order anytime from our website.</p>
+
+    <br>
+
+    <p>Thank you,</p>
+
+    <h3>Sundhar Karthick Art Gallery</h3>
+  `,
+});
 
     res.status(201).json({
       success: true,
@@ -10,6 +63,8 @@ const createOrder = async (req, res) => {
       order,
     });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -17,6 +72,7 @@ const createOrder = async (req, res) => {
   }
 };
 
+// GET ALL ORDERS
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({
@@ -35,6 +91,7 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+// UPDATE ORDER STATUS
 const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -57,13 +114,17 @@ const updateOrderStatus = async (req, res) => {
     });
   }
 };
+
+// TRACK ORDERS BY EMAIL
 const trackOrder = async (req, res) => {
   try {
     const { email } = req.params;
 
     const orders = await Order.find({
       email: email.toLowerCase(),
-    }).sort({ createdAt: -1 });
+    }).sort({
+      createdAt: -1,
+    });
 
     if (orders.length === 0) {
       return res.status(404).json({
@@ -76,6 +137,30 @@ const trackOrder = async (req, res) => {
       success: true,
       orders,
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+const trackOrderById = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.findOne({ orderId });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found.",
+      });
+    }
+
+    res.json({
+      success: true,
+      order,
+    });
 
   } catch (error) {
     res.status(500).json({
@@ -85,6 +170,7 @@ const trackOrder = async (req, res) => {
   }
 };
 
+// UPLOAD COMPLETED PORTRAIT
 const uploadCompletedPortrait = async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,6 +185,80 @@ const uploadCompletedPortrait = async (req, res) => {
       },
       { new: true }
     );
+    await sendEmail({
+  to: order.email,
+  subject: "🎉 Order Confirmation - Sundhar Karthick Art Gallery",
+
+  html: `
+<div style="max-width:650px;margin:auto;background:#1f2937;
+color:white;font-family:Arial;padding:40px;border-radius:12px;">
+
+<h1 style="color:#f59e0b;text-align:center;">
+🎨 Sundhar Karthick Art Gallery
+</h1>
+
+<hr style="border-color:#374151">
+
+<h2>Hello ${order.customerName},</h2>
+
+<p>
+Thank you for placing your portrait order.
+We're excited to create your artwork.
+</p>
+
+<table style="width:100%;margin-top:25px;border-collapse:collapse;">
+
+<tr>
+<td><strong>Order ID</strong></td>
+<td>${order.orderId || "Will be available after deployment"}</td>
+</tr>
+
+<tr>
+<td><strong>Artwork</strong></td>
+<td>${order.artworkType}</td>
+</tr>
+
+<tr>
+<td><strong>Paper Size</strong></td>
+<td>${order.paperSize}</td>
+</tr>
+
+<tr>
+<td><strong>Estimated Price</strong></td>
+<td>₹${order.estimatedPrice}</td>
+</tr>
+
+<tr>
+<td><strong>Advance Paid</strong></td>
+<td>₹${order.advanceAmount}</td>
+</tr>
+
+</table>
+
+<div style="margin-top:35px;text-align:center;">
+
+<a href="http://localhost:5173/track-order"
+style="
+background:#f59e0b;
+color:white;
+padding:14px 28px;
+text-decoration:none;
+border-radius:8px;
+font-weight:bold;
+">
+Track My Order
+</a>
+
+</div>
+
+<p style="margin-top:40px;color:#d1d5db;">
+Thank you for choosing
+<strong>Sundhar Karthick Art Gallery</strong>.
+</p>
+
+</div>
+`,
+});
 
     res.json({
       success: true,
@@ -112,6 +272,7 @@ const uploadCompletedPortrait = async (req, res) => {
   }
 };
 
+// DELETE ORDER
 const deleteOrder = async (req, res) => {
   try {
     const { id } = req.params;
@@ -134,7 +295,8 @@ module.exports = {
   createOrder,
   getAllOrders,
   updateOrderStatus,
+  trackOrder,
+  trackOrderById,
   uploadCompletedPortrait,
   deleteOrder,
-  trackOrder,
 };

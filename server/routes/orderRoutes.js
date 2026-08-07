@@ -5,9 +5,10 @@ const {
   createOrder,
   getAllOrders,
   updateOrderStatus,
+  trackOrder,
+  trackOrderById,
   uploadCompletedPortrait,
   deleteOrder,
-  trackOrder,
 } = require("../controllers/orderController");
 
 // Create Order
@@ -16,7 +17,10 @@ router.post("/", createOrder);
 // Get All Orders
 router.get("/", getAllOrders);
 
-// Track Order by Email
+// Track Order by Order ID
+router.get("/track/order/:orderId", trackOrderById);
+
+// Track Orders by Email
 router.get("/track/:email", trackOrder);
 
 // Update Order Status
