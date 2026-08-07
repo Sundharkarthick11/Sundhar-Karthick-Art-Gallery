@@ -200,8 +200,30 @@ const options = {
 
   console.log("Payment Success:", response);
 
-  // TODO:
-  // Payment verification will be added in the next step
+  
+  // Payment verification 
+  const verifyResponse = await fetch(
+  "http://localhost:5000/api/payment/verify",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      razorpay_order_id: paymentData.order.id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature,
+    }),
+  }
+);
+
+const verifyData = await verifyResponse.json();
+
+if (!verifyData.success) {
+  alert("Payment verification failed.");
+
+  return;
+}
 
   const orderData = {
     customerName: formData.customerName,
