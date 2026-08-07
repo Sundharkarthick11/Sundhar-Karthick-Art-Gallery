@@ -50,6 +50,14 @@ const orderSchema = new mongoose.Schema(
     imageUrl: {
       type: String,
     },
+    completedImageUrl: {
+  type: String,
+  default: "",
+},
+
+completedAt: {
+  type: Date,
+},
 
     notes: {
       type: String,

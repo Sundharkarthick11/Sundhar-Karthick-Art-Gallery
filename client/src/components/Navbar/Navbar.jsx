@@ -1,14 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 z-50 w-full bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
-      <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
+    <nav className="bg-gray-950 border-b border-gray-800">
+      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
         {/* Logo */}
         <Link
           to="/"
-          className="text-xl font-bold text-amber-400"
+          className="text-2xl font-bold text-amber-400"
         >
           Sundhar Karthick
         </Link>
@@ -16,21 +16,60 @@ export default function Navbar() {
         {/* Navigation */}
         <div className="hidden md:flex items-center gap-8">
 
-          <Link to="/" className="hover:text-amber-400 transition">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "text-amber-400 font-semibold"
+                : "text-gray-300 hover:text-amber-400 transition"
+            }
+          >
             Home
-          </Link>
+          </NavLink>
 
-          <Link to="/gallery" className="hover:text-amber-400 transition">
+          <NavLink
+            to="/gallery"
+            className={({ isActive }) =>
+              isActive
+                ? "text-amber-400 font-semibold"
+                : "text-gray-300 hover:text-amber-400 transition"
+            }
+          >
             Gallery
-          </Link>
+          </NavLink>
 
-          <Link to="/order" className="hover:text-amber-400 transition">
+          <NavLink
+            to="/order"
+            className={({ isActive }) =>
+              isActive
+                ? "text-amber-400 font-semibold"
+                : "text-gray-300 hover:text-amber-400 transition"
+            }
+          >
             Order Portrait
-          </Link>
+          </NavLink>
 
-          <Link to="/contact" className="hover:text-amber-400 transition">
+          <NavLink
+            to="/track-order"
+            className={({ isActive }) =>
+              isActive
+                ? "text-amber-400 font-semibold"
+                : "text-gray-300 hover:text-amber-400 transition"
+            }
+          >
+            Track My Order
+          </NavLink>
+
+          <NavLink
+            to="/contact"
+            className={({ isActive }) =>
+              isActive
+                ? "text-amber-400 font-semibold"
+                : "text-gray-300 hover:text-amber-400 transition"
+            }
+          >
             Contact
-          </Link>
+          </NavLink>
 
         </div>
 
