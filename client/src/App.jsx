@@ -7,6 +7,7 @@ import UserSignup from "./pages/UserSignup";
 import MyOrders from "./pages/MyOrders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
+import AdminArtworks from "./pages/AdminArtworks";
 
 import MainLayout from "./layouts/MainLayout";
 import UserLogin from "./pages/UserLogin";
@@ -104,6 +105,14 @@ export default function App() {
           path="/admin/login"
           element={<AdminLogin />}
         />
+        <Route
+  path="/admin/artworks"
+  element={
+    <ProtectedRoute>
+      <AdminArtworks />
+    </ProtectedRoute>
+  }
+/>
 
 
         {/* ========================================= */}

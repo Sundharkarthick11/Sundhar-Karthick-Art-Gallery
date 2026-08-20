@@ -61,12 +61,23 @@ const AdminDashboard = () => {
           </p>
         </div>
 
-        <button
-          onClick={logout}
-          className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg text-white font-semibold transition"
-        >
-          Logout
-        </button>
+        <div className="flex gap-3">
+
+  <button
+    onClick={() => navigate("/admin/artworks")}
+    className="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg text-black font-semibold transition"
+  >
+    Manage Artworks
+  </button>
+
+  <button
+    onClick={logout}
+    className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg text-white font-semibold transition"
+  >
+    Logout
+  </button>
+
+</div>
 
       </div>
 

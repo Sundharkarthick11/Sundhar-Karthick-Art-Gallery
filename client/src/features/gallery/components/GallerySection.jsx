@@ -6,9 +6,8 @@ import GalleryFilter from "./GalleryFilter";
 import GalleryGrid from "./GalleryGrid";
 import GalleryModal from "./GalleryModal";
 
-import galleryData from "../data/galleryData";
-
 const galleryCategories = [
+  "All",
   "Pencil Drawings",
   "Portraits",
   "Family Portraits",
@@ -22,6 +21,8 @@ const galleryCategories = [
 export default function GallerySection() {
   const navigate = useNavigate();
 
+  const [artworks, setArtworks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedArtwork, setSelectedArtwork] = useState(null);
@@ -37,6 +38,38 @@ export default function GallerySection() {
   });
 
   const [showSavedOnly, setShowSavedOnly] = useState(false);
+
+  // ==========================================
+  // FETCH ARTWORKS FROM MONGODB
+  // ==========================================
+
+  useEffect(() => {
+    fetchArtworks();
+  }, []);
+
+  const fetchArtworks = async () => {
+  try {
+    setLoading(true);
+
+    const response = await fetch(
+      "http://localhost:5000/api/artworks"
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      setArtworks(data.artworks);
+    }
+  } catch (error) {
+    console.error("Failed to fetch artworks:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // ==========================================
+  // SAVE ARTWORKS
+  // ==========================================
 
   useEffect(() => {
     localStorage.setItem(
@@ -77,7 +110,11 @@ export default function GallerySection() {
     setShowSavedOnly((prev) => !prev);
   };
 
-  const filteredArtworks = galleryData.filter((artwork) => {
+  // ==========================================
+  // FILTER ARTWORKS
+  // ==========================================
+
+  const filteredArtworks = artworks.filter((artwork) => {
     const matchesCategory =
       selectedCategory === "All" ||
       artwork.category === selectedCategory;
@@ -85,12 +122,12 @@ export default function GallerySection() {
     const search = searchTerm.trim().toLowerCase();
 
     const matchesSearch =
-      artwork.title.toLowerCase().includes(search) ||
-      artwork.category.toLowerCase().includes(search);
+      artwork.title?.toLowerCase().includes(search) ||
+      artwork.category?.toLowerCase().includes(search);
 
     const matchesSaved =
       !showSavedOnly ||
-      savedArtworks.includes(artwork.id);
+      savedArtworks.includes(artwork._id);
 
     return (
       matchesCategory &&
@@ -104,6 +141,13 @@ export default function GallerySection() {
       (artwork) => artwork.category === category
     );
   };
+  if (loading) {
+  return (
+    <div className="py-20 text-center text-white">
+      Loading artworks...
+    </div>
+  );
+}
 
   const hasResults = filteredArtworks.length > 0;
 
@@ -158,6 +202,7 @@ export default function GallerySection() {
                     <h2 className="text-3xl font-bold text-white">
                       {category}
                     </h2>
+
                     <div className="mt-4 h-px bg-slate-800" />
                   </div>
 

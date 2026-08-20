@@ -8,6 +8,7 @@ const cors = require("cors");
 
 const connectDB = require("./config/db");
 const orderRoutes = require("./routes/orderRoutes");
+const artworkRoutes = require("./routes/artworkRoutes");
 const savedArtworkRoutes = require(
   "./routes/savedArtworkRoutes"
 );
@@ -23,6 +24,7 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/cloudinary", cloudinaryRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/artworks", artworkRoutes);
 app.use(
   "/api/saved-artworks",
   savedArtworkRoutes

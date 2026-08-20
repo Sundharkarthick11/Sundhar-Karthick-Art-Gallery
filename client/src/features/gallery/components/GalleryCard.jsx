@@ -21,15 +21,19 @@ export default function GalleryCard({
       {/* Artwork Image */}
       <div className="relative overflow-hidden">
         <img
-          src={artwork.image}
+          src={artwork.imageUrl}
           alt={artwork.title}
+          onError={(e) => {
+            e.target.src =
+              "https://placehold.co/600x800?text=Artwork";
+          }}
           className="h-80 w-full object-cover transition duration-500 group-hover:scale-110"
         />
 
         {/* Save Artwork Button */}
         <button
           type="button"
-          onClick={() => onToggleSave(artwork.id)}
+          onClick={() => onToggleSave(artwork._id)}
           aria-label={
             isSaved
               ? "Remove from saved artworks"
@@ -48,8 +52,16 @@ export default function GalleryCard({
         </button>
       </div>
 
-      {/* Card Content */}
+      {/* Artwork Details */}
       <div className="p-5">
+        <h3 className="mb-2 text-xl font-semibold text-white">
+          {artwork.title}
+        </h3>
+
+        
+
+        
+
         <button
           onClick={() => onViewDetails(artwork)}
           className="w-full rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 py-3 font-medium text-white transition hover:scale-[1.02]"

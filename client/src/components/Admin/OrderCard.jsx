@@ -222,10 +222,14 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
 
             {order.imageUrl ? (
               <img
-                src={order.imageUrl}
-                alt="Customer Reference"
-                className="h-60 w-full rounded-xl border border-slate-600 bg-slate-900 p-2 object-contain"
-              />
+  src={order.imageUrl}
+  alt="Customer Reference"
+  onError={(e) => {
+    e.target.src =
+      "https://placehold.co/600x400?text=Image+Not+Found";
+  }}
+  className="h-60 w-full rounded-xl border border-slate-600 bg-slate-900 p-2 object-contain"
+/>
             ) : (
               <div className="flex h-60 items-center justify-center rounded-xl border border-dashed border-slate-600 bg-slate-900 text-sm text-slate-500">
                 No Reference Image
@@ -263,10 +267,14 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
 
             {order.completedImageUrl ? (
               <img
-                src={order.completedImageUrl}
-                alt="Completed Portrait"
-                className="h-60 w-full rounded-xl border border-slate-600 bg-slate-900 p-2 object-contain"
-              />
+  src={order.completedImageUrl}
+  alt="Completed Portrait"
+  onError={(e) => {
+    e.target.src =
+      "https://placehold.co/600x400?text=Image+Not+Found";
+  }}
+  className="h-60 w-full rounded-xl border border-slate-600 bg-slate-900 p-2 object-contain"
+/>
             ) : (
               <div className="flex h-60 items-center justify-center rounded-xl border border-dashed border-slate-600 bg-slate-900 text-sm text-slate-500">
                 Not Uploaded Yet
