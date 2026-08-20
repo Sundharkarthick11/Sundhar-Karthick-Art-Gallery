@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 export default function About() {
+  const navigate = useNavigate();
+
   return (
     <section className="bg-slate-900 text-white py-20 px-6">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -26,9 +30,9 @@ export default function About() {
             Every sketch preserves a memory.
 
             I specialize in handcrafted portraits,
-            pencil drawings, charcoal art,
-            acrylic paintings and custom artworks
-            created with precision, patience and passion.
+            graphite art, charcoal art, pixel art,
+            and custom artworks created with
+            precision, patience, and passion.
           </p>
 
           <p className="mt-6 text-slate-400">
@@ -37,7 +41,10 @@ export default function About() {
             will be cherished forever.
           </p>
 
-          <button className="mt-10 bg-amber-500 hover:bg-amber-600 transition px-8 py-3 rounded-xl text-white">
+          <button
+            onClick={() => navigate("/contact")}
+            className="mt-10 bg-amber-500 hover:bg-amber-600 transition px-8 py-3 rounded-xl text-white"
+          >
             Learn More
           </button>
 

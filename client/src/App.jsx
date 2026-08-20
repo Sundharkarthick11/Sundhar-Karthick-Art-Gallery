@@ -1,44 +1,124 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import ProtectedRoute from "./components/ProtectedRoute";
+import UserProtectedRoute from "./components/UserProtectedRoute";
+import UserAccount from "./pages/UserAccount";
+import UserSignup from "./pages/UserSignup";
+import MyOrders from "./pages/MyOrders";
 import AdminDashboard from "./pages/AdminDashboard";
-import TrackOrder from "./pages/TrackOrder";
-import MainLayout from "./layouts/MainLayout";
 import AdminLogin from "./pages/AdminLogin";
+
+import MainLayout from "./layouts/MainLayout";
+import UserLogin from "./pages/UserLogin";
 
 import Home from "./pages/Home";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import OrderPortrait from "./pages/OrderPortrait";
 
+import TrackOrder from "./pages/TrackOrder";
+import SavedArtworks from "./pages/SavedArtworks";
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
 
+        {/* ========================================= */}
+        {/* CUSTOMER WEBSITE */}
+        {/* ========================================= */}
+
         <Route element={<MainLayout />}>
+        <Route path="/login" element={<UserLogin />} />
 
-          <Route path="/" element={<Home />} />
-
-          <Route path="/gallery" element={<Gallery />} />
-
-          <Route path="/contact" element={<Contact />} />
-
-          <Route path="/order" element={<OrderPortrait />} />
           <Route
-  path="/admin"
+            path="/"
+            element={<Home />}
+          />
+          <Route
+  path="/signup"
+  element={<UserSignup />}
+/>
+
+          <Route
+            path="/gallery"
+            element={<Gallery />}
+          />
+          <Route
+  path="/my-orders"
   element={
-    <ProtectedRoute>
-      <AdminDashboard />
-    </ProtectedRoute>
+    <UserProtectedRoute>
+      <MyOrders />
+    </UserProtectedRoute>
   }
 />
-          <Route path="/track-order" element={<TrackOrder />} />
+         <Route
+  path="/account"
+  element={
+    <UserProtectedRoute>
+      <UserAccount />
+    </UserProtectedRoute>
+  }
+/>
+<Route
+  path="/saved-artworks"
+  element={
+    <UserProtectedRoute>
+      <SavedArtworks />
+    </UserProtectedRoute>
+  }
+/>
+
           <Route
-  path="/admin/login"
-  element={<AdminLogin />}
+            path="/contact"
+            element={<Contact />}
+          />
+
+         <Route
+  path="/order"
+  element={
+    <UserProtectedRoute>
+      <OrderPortrait />
+    </UserProtectedRoute>
+  }
+/>
+
+          <Route
+  path="/track-order"
+  element={
+    <UserProtectedRoute>
+      <TrackOrder />
+    </UserProtectedRoute>
+  }
 />
 
         </Route>
+
+
+        {/* ========================================= */}
+        {/* ADMIN LOGIN */}
+        {/* No Customer Navbar */}
+        {/* ========================================= */}
+
+        <Route
+          path="/admin/login"
+          element={<AdminLogin />}
+        />
+
+
+        {/* ========================================= */}
+        {/* ADMIN DASHBOARD */}
+        {/* No Customer Navbar */}
+        {/* ========================================= */}
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
     </BrowserRouter>

@@ -1,51 +1,106 @@
 const galleryData = [
+  // ==========================================
+  // PENCIL DRAWINGS
+  // ==========================================
   {
     id: 1,
     title: "Pencil Portrait",
-    category: "Pencil Drawing",
-    image: "https://placehold.co/600x800/1e293b/ffffff?text=Pencil+Portrait",
+    category: "Pencil Drawings",
+    image:
+      "https://placehold.co/600x800/1e293b/ffffff?text=Pencil+Drawing",
     description:
-      "A realistic hand-drawn pencil portrait crafted with fine graphite detailing.",
+      "A realistic hand-drawn artwork created with detailed graphite shading and fine pencil strokes.",
   },
+
+  // ==========================================
+  // PORTRAITS
+  // ==========================================
   {
     id: 2,
-    title: "Family Portrait",
-    category: "Portrait",
-    image: "https://placehold.co/600x800/334155/ffffff?text=Family+Portrait",
+    title: "Portrait",
+    category: "Portraits",
+    image:
+      "https://placehold.co/600x800/334155/ffffff?text=Portrait",
     description:
-      "A beautiful family portrait capturing emotions and precious memories.",
+      "A handcrafted portrait created to capture personality, emotion, and memorable moments.",
   },
+
+  // ==========================================
+  // FAMILY PORTRAITS
+  // ==========================================
   {
     id: 3,
-    title: "Charcoal Sketch",
-    category: "Charcoal Art",
-    image: "https://placehold.co/600x800/475569/ffffff?text=Charcoal+Sketch",
+    title: "Family Portrait",
+    category: "Family Portraits",
+    image:
+      "https://placehold.co/600x800/475569/ffffff?text=Family+Portrait",
     description:
-      "Expressive charcoal artwork with rich textures and bold shading.",
+      "A beautiful family portrait capturing togetherness, emotions, and precious memories.",
   },
+
+  // ==========================================
+  // CHARCOAL ART
+  // ==========================================
   {
     id: 4,
-    title: "Digital Painting",
-    category: "Digital Art",
-    image: "https://placehold.co/600x800/0f172a/ffffff?text=Digital+Art",
+    title: "Charcoal Sketch",
+    category: "Charcoal Art",
+    image:
+      "https://placehold.co/600x800/0f172a/ffffff?text=Charcoal+Art",
     description:
-      "Modern digital artwork created with vibrant colors and detailed composition.",
+      "Expressive charcoal artwork created with rich textures, contrast, and bold shading.",
   },
+
+  // ==========================================
+  // PAINTINGS
+  // ==========================================
   {
     id: 5,
-    title: "Color Pencil Art",
-    category: "Color Pencil",
-    image: "https://placehold.co/600x800/1f2937/ffffff?text=Color+Pencil",
+    title: "Handcrafted Painting",
+    category: "Paintings",
+    image:
+      "https://placehold.co/600x800/111827/ffffff?text=Painting",
     description:
-      "A colorful portrait blending realistic details with soft artistic tones.",
+      "A handcrafted painting created with artistic detail, creativity, and vibrant expression.",
   },
+
+  // ==========================================
+  // DIGITAL ART
+  // ==========================================
   {
     id: 6,
-    title: "Acrylic Painting",
-    category: "Painting",
-    image: "https://placehold.co/600x800/111827/ffffff?text=Painting",
+    title: "Digital Artwork",
+    category: "Digital Art",
+    image:
+      "https://placehold.co/600x800/1f2937/ffffff?text=Digital+Art",
     description:
-      "An elegant acrylic painting featuring handcrafted brushwork and vivid colors.",
+      "A modern digital artwork combining creative ideas with detailed digital composition.",
+  },
+
+  // ==========================================
+  // CREATIVE ART
+  // ==========================================
+  {
+    id: 7,
+    title: "Creative Artwork",
+    category: "Creative Art",
+    image:
+      "https://placehold.co/600x800/172033/ffffff?text=Creative+Art",
+    description:
+      "A unique creative artwork exploring imagination, artistic expression, and handcrafted detail.",
+  },
+
+  // ==========================================
+  // PIXEL ART
+  // ==========================================
+  {
+    id: 8,
+    title: "Pixel Art",
+    category: "Pixel Art",
+    image:
+      "https://placehold.co/600x800/1e293b/ffffff?text=Pixel+Art",
+    description:
+      "A creative pixel artwork built with carefully crafted digital details and unique visual expression.",
   },
 ];
 

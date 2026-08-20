@@ -2,10 +2,17 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
+    // ===============================
+    // ORDER ID
+    // ===============================
     orderId: {
-  type: String,
-  unique: true,
-},
+      type: String,
+      unique: true,
+    },
+
+    // ===============================
+    // CUSTOMER DETAILS
+    // ===============================
     customerName: {
       type: String,
       required: true,
@@ -14,6 +21,8 @@ const orderSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      lowercase: true,
+      trim: true,
     },
 
     phone: {
@@ -21,21 +30,52 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    // ===============================
+    // ARTWORK DETAILS
+    // ===============================
     artworkType: {
       type: String,
       required: true,
+      enum: ["Graphite Art", "Charcoal Art", "Pixel Art"],
     },
 
     paperSize: {
       type: String,
       required: true,
+      enum: ["A5", "A4", "A3", "A2"],
     },
 
     peopleCount: {
       type: Number,
       required: true,
+      min: 1,
     },
 
+    // ===============================
+    // DELIVERY DETAILS
+    // ===============================
+    deliveryMethod: {
+      type: String,
+      required: true,
+      enum: ["In-Hand / Pickup", "Post / Courier"],
+    },
+
+    deliveryCharge: {
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+    },
+
+    deliveryAddress: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    // ===============================
+    // PRICE DETAILS
+    // ===============================
     estimatedPrice: {
       type: Number,
       required: true,
@@ -51,30 +91,50 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    // ===============================
+    // CUSTOMER REFERENCE IMAGE
+    // ===============================
     imageUrl: {
       type: String,
+      default: "",
     },
+
+    // ===============================
+    // COMPLETED PORTRAIT
+    // ===============================
     completedImageUrl: {
-  type: String,
-  default: "",
-},
+      type: String,
+      default: "",
+    },
 
-completedAt: {
-  type: Date,
-},
+    completedAt: {
+      type: Date,
+    },
 
+    // ===============================
+    // NOTES
+    // ===============================
     notes: {
       type: String,
+      default: "",
     },
 
+    // ===============================
+    // PAYMENT
+    // ===============================
     paymentStatus: {
       type: String,
       default: "Pending",
     },
-    paymentId: {
-  type: String,
-},
 
+    paymentId: {
+      type: String,
+      default: "",
+    },
+
+    // ===============================
+    // ORDER STATUS
+    // ===============================
     orderStatus: {
       type: String,
       default: "Pending Review",

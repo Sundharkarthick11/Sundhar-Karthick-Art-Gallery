@@ -1,11 +1,13 @@
 const categories = [
   "All",
-  "Pencil Drawing",
-  "Portrait",
-  "Painting",
+  "Pencil Drawings",
+  "Portraits",
+  "Family Portraits",
   "Charcoal Art",
+  "Paintings",
   "Digital Art",
-  "Color Pencil",
+  "Creative Art",
+  "Pixel Art",
 ];
 
 export default function GalleryFilter({
@@ -13,7 +15,7 @@ export default function GalleryFilter({
   onCategoryChange,
 }) {
   return (
-    <div className="max-w-7xl mx-auto px-6 mt-8 flex flex-wrap justify-center gap-4">
+    <div className="max-w-7xl mx-auto px-6 mt-8 flex flex-wrap justify-center gap-3">
       {categories.map((category) => (
         <button
           key={category}

@@ -8,42 +8,46 @@ export default function GalleryModal({
   artworks,
   onClose,
   onChangeArtwork,
-})  {
-  if (!artwork) return null;
-  const currentIndex = artworks.findIndex(
-  (item) => item.id === artwork.id
-);
+}) {
+  const navigate = useNavigate();
 
-const handlePrevious = () => {
-  if (currentIndex > 0) {
-    onChangeArtwork(artworks[currentIndex - 1]);
-  }
-};
-
-const handleNext = () => {
-  if (currentIndex < artworks.length - 1) {
-    onChangeArtwork(artworks[currentIndex + 1]);
-  }
-};
   useEffect(() => {
-  const handleKeyDown = (event) => {
-    if (event.key === "Escape") {
-      onClose();
+    if (!artwork) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [artwork, onClose]);
+
+  if (!artwork) return null;
+
+  const currentIndex = artworks.findIndex(
+    (item) => item.id === artwork.id
+  );
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      onChangeArtwork(artworks[currentIndex - 1]);
     }
   };
 
-  window.addEventListener("keydown", handleKeyDown);
-
-  return () => {
-    window.removeEventListener("keydown", handleKeyDown);
+  const handleNext = () => {
+    if (currentIndex < artworks.length - 1) {
+      onChangeArtwork(artworks[currentIndex + 1]);
+    }
   };
-}, [onClose]);
-
-const navigate = useNavigate();
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <motion.div
@@ -58,64 +62,71 @@ const navigate = useNavigate();
         <button
           onClick={onClose}
           className="absolute right-4 top-4 z-10 rounded-full bg-slate-800 p-2 text-white transition hover:bg-slate-700"
+          aria-label="Close"
         >
           <X size={22} />
         </button>
 
         <div className="grid md:grid-cols-2">
+
           {/* Artwork Image */}
-          <div className="h-[500px]">
+          <div className="h-[500px] bg-black">
             <img
               src={artwork.image}
               alt={artwork.title}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
             />
           </div>
 
           {/* Artwork Details */}
           <div className="flex flex-col justify-center p-8">
+
+            {/* Artwork Title */}
             <h2 className="text-3xl font-bold text-white">
               {artwork.title}
             </h2>
 
-            <p className="mt-3 text-lg font-medium text-amber-400">
-              {artwork.category}
-            </p>
-
+            {/* Description */}
             <p className="mt-6 leading-8 text-slate-300">
               {artwork.description}
             </p>
 
+            {/* Navigation */}
             <div className="mt-10">
-  {/* Previous & Next Navigation */}
-  <div className="flex items-center justify-between">
-    <button
-      onClick={handlePrevious}
-      disabled={currentIndex === 0}
-      className="rounded-lg border border-slate-600 px-5 py-3 text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
-    >
-      ← Previous
-    </button>
 
-    <button
-      onClick={handleNext}
-      disabled={currentIndex === artworks.length - 1}
-      className="rounded-lg border border-slate-600 px-5 py-3 text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
-    >
-      Next →
-    </button>
-  </div>
+              <div className="flex items-center justify-between gap-4">
 
-  {/* Order Button */}
-  <div className="mt-8 flex justify-center">
-    <button
-  onClick={() => navigate("/order")}
-  className="rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 px-8 py-3 font-medium text-white transition hover:scale-105"
->
-  Order Similar Portrait
-</button>
-  </div>
-</div>
+                <button
+                  onClick={handlePrevious}
+                  disabled={currentIndex === 0}
+                  className="rounded-lg border border-slate-600 px-5 py-3 text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  ← Previous
+                </button>
+
+                <button
+                  onClick={handleNext}
+                  disabled={currentIndex === artworks.length - 1}
+                  className="rounded-lg border border-slate-600 px-5 py-3 text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Next →
+                </button>
+
+              </div>
+
+              {/* Order Button */}
+              <div className="mt-8 flex justify-center">
+
+                <button
+                  onClick={() => navigate("/order")}
+                  className="rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 px-8 py-3 font-medium text-white transition hover:scale-105"
+                >
+                  Order Similar Portrait
+                </button>
+
+              </div>
+
+            </div>
           </div>
         </div>
       </motion.div>

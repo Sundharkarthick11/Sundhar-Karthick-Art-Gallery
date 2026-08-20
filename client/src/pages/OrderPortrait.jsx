@@ -7,6 +7,8 @@ export default function OrderPortrait() {
   const [artworkType, setArtworkType] = useState("");
 const [paperSize, setPaperSize] = useState("");
 const [peopleCount, setPeopleCount] = useState("1");
+const [deliveryMethod, setDeliveryMethod] = useState("");
+const [deliveryAddress, setDeliveryAddress] = useState("");
 const [isSubmitted, setIsSubmitted] = useState(false);
 const [formData, setFormData] = useState({
   customerName: "",
@@ -110,6 +112,14 @@ const validateForm = () => {
     newErrors.peopleCount =
       "Please select the number of people.";
   }
+  if (!deliveryMethod) {
+  newErrors.deliveryMethod =
+    "Please select a delivery method.";
+}
+if (deliveryMethod === "Post / Courier" && !deliveryAddress.trim()) {
+  newErrors.deliveryAddress =
+    "Please enter your delivery address.";
+}
 
   // ===========================
   // Reference Image
@@ -226,25 +236,32 @@ if (!verifyData.success) {
 }
 
   const orderData = {
-    customerName: formData.customerName,
-    email: formData.email,
-    phone: formData.phone,
+  customerName: formData.customerName,
+  email: formData.email,
+  phone: formData.phone,
 
-    artworkType,
-    paperSize,
-    peopleCount: Number(peopleCount),
+  artworkType,
+  paperSize,
+  peopleCount: Number(peopleCount),
 
-    estimatedPrice: totalPrice,
-    advanceAmount,
-    balanceAmount,
+  deliveryMethod,
+  deliveryCharge,
+deliveryAddress:
+  deliveryMethod === "Post / Courier"
+    ? deliveryAddress.trim()
+    : "",
 
-    imageUrl,
-    notes: formData.notes,
+  estimatedPrice: totalPrice,
+  advanceAmount,
+  balanceAmount,
 
-    paymentStatus: "Paid",
-    paymentId: response.razorpay_payment_id,
-    orderStatus: "Pending",
-  };
+  imageUrl,
+  notes: formData.notes,
+
+  paymentStatus: "Paid",
+  paymentId: response.razorpay_payment_id,
+  orderStatus: "Pending",
+};
 
   try {
 
@@ -275,6 +292,8 @@ if (!verifyData.success) {
       setArtworkType("");
       setPaperSize("");
       setPeopleCount("1");
+      setDeliveryMethod("");
+      setDeliveryAddress("");
       setPreviewImage(null);
       setSelectedFile(null);
       setAcceptedTerms(false);
@@ -345,65 +364,63 @@ return;
 
 
 const pricing = {
-  "Pencil Drawing": {
-    A5: 500,
-    A4: 900,
-    A3: 1500,
-    A2: 2500,
+  "Graphite Art": {
+    A5: 350,
+    A4: 500,
+    A3: 800,
+    A2: 1000,
   },
 
-  "Color Pencil Art": {
-    A5: 800,
-    A4: 1400,
-    A3: 2200,
-    A2: 3500,
+  "Charcoal Art": {
+    A5: 300,
+    A4: 450,
+    A3: 750,
+    A2: 950,
   },
 
-  "Charcoal Sketch": {
-    A5: 700,
-    A4: 1200,
-    A3: 2000,
-    A2: 3200,
-  },
-
-  "Acrylic Painting": {
-    A5: 1000,
-    A4: 1800,
-    A3: 3000,
-    A2: 4800,
-  },
-
-  "Digital Art": {
-    A5: 600,
-    A4: 1000,
-    A3: 1700,
-    A2: 2600,
+  "Pixel Art": {
+    A5: 550,
+    A4: 700,
+    A3: 1000,
+    A2: 1200,
   },
 };
+
 const basePrice =
   artworkType && paperSize
-    ? pricing[artworkType][paperSize]
+    ? pricing[artworkType]?.[paperSize] || 0
     : 0;
 
+// Extra charge for each additional person
 const extraPersonCharges = {
-  "Pencil Drawing": 300,
-  "Color Pencil Art": 500,
-  "Charcoal Sketch": 400,
-  "Acrylic Painting": 800,
-  "Digital Art": 400,
+  "Graphite Art": 150,
+  "Charcoal Art": 100,
+  "Pixel Art": 200,
 };
 
 const extraCharge =
   extraPersonCharges[artworkType] || 0;
 
 const extraPeople =
-  peopleCount > 1
+  Number(peopleCount) > 1
     ? (Number(peopleCount) - 1) * extraCharge
     : 0;
 
-const totalPrice = basePrice + extraPeople;
-const advanceAmount = Math.round(totalPrice * 0.5);
-const balanceAmount = totalPrice - advanceAmount;
+// Delivery charge
+const deliveryCharge =
+  deliveryMethod === "Post / Courier" ? 50 : 0;
+
+// Final total
+const totalPrice =
+  basePrice + extraPeople + deliveryCharge;
+
+// 40% advance
+const advanceAmount =
+  Math.round(totalPrice * 0.40);
+
+// 60% balance
+const balanceAmount =
+  totalPrice - advanceAmount;
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <div className="mx-auto max-w-7xl px-6 py-20">
@@ -531,21 +548,28 @@ const balanceAmount = totalPrice - advanceAmount;
     <select
   value={artworkType}
   onChange={(e) => {
-  setArtworkType(e.target.value);
+    setArtworkType(e.target.value);
 
-  setErrors((prev) => ({
-    ...prev,
-    artworkType: "",
-  }));
-}}
+    setErrors((prev) => ({
+      ...prev,
+      artworkType: "",
+    }));
+  }}
   className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
 >
   <option value="">Select Artwork Type</option>
-  <option value="Pencil Drawing">Pencil Drawing</option>
-  <option value="Color Pencil Art">Color Pencil Art</option>
-  <option value="Charcoal Sketch">Charcoal Sketch</option>
-  <option value="Acrylic Painting">Acrylic Painting</option>
-  <option value="Digital Art">Digital Art</option>
+
+  <option value="Graphite Art">
+    Graphite Art
+  </option>
+
+  <option value="Charcoal Art">
+    Charcoal Art
+  </option>
+
+  <option value="Pixel Art">
+    Pixel Art
+  </option>
 </select>
 {errors.artworkType && (
   <p className="mt-1 text-sm text-red-500">
@@ -615,6 +639,82 @@ const balanceAmount = totalPrice - advanceAmount;
   </p>
 )}
   </div>
+  {/* Delivery Method */}
+{/* Delivery Method */}
+<div className="mt-6">
+  <label className="mb-2 block text-sm font-medium">
+    Delivery Method
+  </label>
+
+  <select
+    value={deliveryMethod}
+    onChange={(e) => {
+      const value = e.target.value;
+
+      setDeliveryMethod(value);
+
+    if (value !== "Post / Courier") {
+      setDeliveryAddress("");
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      deliveryMethod: "",
+      deliveryAddress: "",
+      }));
+    }}
+    className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none focus:border-amber-400"
+  >
+    <option value="">Select Delivery Method</option>
+
+    <option value="In-Hand / Pickup">
+      In-Hand / Pickup — Free
+    </option>
+
+    <option value="Post / Courier">
+      Post / Courier — ₹50
+    </option>
+  </select>
+
+  {errors.deliveryMethod && (
+    <p className="mt-1 text-sm text-red-500">
+      {errors.deliveryMethod}
+    </p>
+  )}
+</div>
+{deliveryMethod === "Post / Courier" && (
+  <div className="mt-6">
+    <label className="mb-2 block text-sm font-medium text-white">
+      Delivery Address <span className="text-red-400">*</span>
+    </label>
+
+    <textarea
+      value={deliveryAddress}
+      onChange={(e) => {
+        setDeliveryAddress(e.target.value);
+
+        setErrors((prev) => ({
+          ...prev,
+          deliveryAddress: "",
+        }));
+      }}
+      placeholder="Enter your complete delivery address"
+      rows={4}
+      className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-amber-400"
+    />
+
+    {errors.deliveryAddress && (
+      <p className="mt-1 text-sm text-red-500">
+        {errors.deliveryAddress}
+      </p>
+    )}
+
+    <p className="mt-2 text-xs text-slate-400">
+      Please provide your complete address including door number,
+      street, area, city, state and PIN code.
+    </p>
+  </div>
+)}
 </div>
 {/* Reference Image */}
 <div className="border-t border-slate-700 pt-6">
@@ -723,6 +823,7 @@ const balanceAmount = totalPrice - advanceAmount;
 )}
 </div>
 {/* Estimated Price */}
+{/* Estimated Price */}
 <div className="rounded-xl border border-amber-500/30 bg-slate-800 p-6">
   <h3 className="text-xl font-semibold text-amber-400">
     💰 Estimated Price
@@ -736,69 +837,121 @@ const balanceAmount = totalPrice - advanceAmount;
     <>
       <div className="mt-5 space-y-4">
 
-  <div className="flex justify-between text-slate-300">
-    <span>Artwork Type</span>
-    <span className="font-medium">
-      {artworkType || "-"}
-    </span>
-  </div>
+        {/* Artwork Type */}
+        <div className="flex justify-between text-slate-300">
+          <span>Artwork Type</span>
 
-  <div className="flex justify-between text-slate-300">
-    <span>Paper Size</span>
-    <span className="font-medium">
-      {paperSize || "-"}
-    </span>
-  </div>
+          <span className="font-medium text-white">
+            {artworkType || "-"}
+          </span>
+        </div>
 
-  <div className="flex justify-between text-slate-300">
-    <span>People</span>
-    <span className="font-medium">
-      {peopleCount}
-    </span>
-  </div>
+        {/* Paper Size */}
+        <div className="flex justify-between text-slate-300">
+          <span>Paper Size</span>
 
-  <hr className="border-slate-700" />
+          <span className="font-medium text-white">
+            {paperSize || "-"}
+          </span>
+        </div>
 
-  <div className="flex justify-between text-slate-300">
-    <span>Base Price</span>
-    <span>₹{basePrice}</span>
-  </div>
+        {/* Number of People */}
+        <div className="flex justify-between text-slate-300">
+          <span>People</span>
 
-  <div className="flex justify-between text-slate-300">
-    <span>
-      Extra People
-      {Number(peopleCount) > 1 &&
-        ` (${Number(peopleCount) - 1} × ₹${extraCharge})`}
-    </span>
+          <span className="font-medium text-white">
+            {peopleCount}
+          </span>
+        </div>
 
-    <span>₹{extraPeople}</span>
-  </div>
+        {/* Delivery Method */}
+        <div className="flex justify-between text-slate-300">
+          <span>Delivery</span>
 
-  <hr className="border-slate-700" />
+          <span className="font-medium text-white">
+            {deliveryMethod || "-"}
+          </span>
+        </div>
 
-  <div className="flex justify-between text-2xl font-bold text-amber-400">
-  <span>Estimated Total</span>
-  <span>₹{totalPrice}</span>
-</div>
+        <hr className="border-slate-700" />
 
-<hr className="border-slate-700" />
+        {/* Base Price */}
+        <div className="flex justify-between text-slate-300">
+          <span>Base Price</span>
 
-<div className="flex justify-between text-green-400 font-semibold">
-  <span>Advance Payment (50%)</span>
-  <span>₹{advanceAmount}</span>
-</div>
+          <span className="font-medium">
+            ₹{basePrice}
+          </span>
+        </div>
 
-<div className="flex justify-between text-slate-300">
-  <span>Balance Payment</span>
-  <span>₹{balanceAmount}</span>
-</div>
-</div>
+        {/* Extra People */}
+        <div className="flex justify-between text-slate-300">
+          <span>
+            Extra People
 
-<p className="mt-5 rounded-lg bg-slate-900 p-4 text-sm text-slate-400">
-  * This is an approximate estimate. The final quotation will be confirmed
-  after reviewing your reference image, artwork complexity, and any custom
-  requirements.
-</p>
+            {Number(peopleCount) > 1 && (
+              <span className="text-sm text-slate-400">
+                {" "}
+                ({Number(peopleCount) - 1} × ₹{extraCharge})
+              </span>
+            )}
+          </span>
+
+          <span className="font-medium">
+            ₹{extraPeople}
+          </span>
+        </div>
+
+        {/* Delivery Charge */}
+        <div className="flex justify-between text-slate-300">
+          <span>Delivery Charge</span>
+
+          <span className="font-medium">
+            {deliveryCharge > 0
+              ? `₹${deliveryCharge}`
+              : "Free"}
+          </span>
+        </div>
+
+        <hr className="border-slate-700" />
+
+        {/* Total */}
+        <div className="flex justify-between items-center text-2xl font-bold text-amber-400">
+          <span>Estimated Total</span>
+
+          <span>
+            ₹{totalPrice}
+          </span>
+        </div>
+
+        <hr className="border-slate-700" />
+
+        {/* Advance */}
+        <div className="flex justify-between text-green-400 font-semibold">
+          <span>Advance Payment (40%)</span>
+
+          <span>
+            ₹{advanceAmount}
+          </span>
+        </div>
+
+        {/* Balance */}
+        <div className="flex justify-between text-slate-300">
+          <span>Balance Payment (60%)</span>
+
+          <span>
+            ₹{balanceAmount}
+          </span>
+        </div>
+
+      </div>
+
+      {/* Note */}
+      <p className="mt-5 rounded-lg bg-slate-900 p-4 text-sm text-slate-400">
+        * This is an approximate estimate. The final quotation will be
+        confirmed after reviewing your reference image, artwork complexity,
+        and any custom requirements.
+      </p>
     </>
   )}
 </div>
@@ -813,113 +966,158 @@ const balanceAmount = totalPrice - advanceAmount;
       : "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 hover:scale-[1.02]"
   }`}
 >
-  {isSubmitted ? "✓ Order Submitted Successfully" : "Submit Order Request"}
+  {isSubmitted
+    ? "✓ Order Submitted Successfully"
+    : "Submit Order Request"}
 </button>
 
 </form>
 
             {/* Form fields will be added in the next step */}
           </div>
+{/* Right Side - Pricing Guide */}
+<div className="rounded-2xl bg-slate-900 p-8 shadow-xl">
 
-          {/* Right Side - Pricing Guide */}
-          <div className="rounded-2xl bg-slate-900 p-8 shadow-xl">
-            <h2 className="text-3xl font-bold text-amber-400">
-              Portrait Pricing Guide
-            </h2>
+  <h2 className="text-3xl font-bold text-amber-400">
+    Portrait Pricing Guide
+  </h2>
 
-            <p className="mt-3 text-slate-400">
-              Choose your preferred artwork style and size. Final pricing will
-              be confirmed after reviewing your reference image.
-            </p>
+  <p className="mt-3 text-slate-400">
+    Choose your preferred artwork style and size. Final pricing will be
+    confirmed after reviewing your reference image.
+  </p>
 
-            {/* Pencil Drawing */}
-            <div className="mt-8">
-              <h3 className="text-xl font-semibold text-white">
-                ✏️ Pencil Drawing
-              </h3>
+  {/* Graphite Art */}
+  <div className="mt-8">
+    <h3 className="text-xl font-semibold text-white">
+      ✏️ Graphite Art
+    </h3>
 
-              <div className="mt-3 grid grid-cols-2 gap-2 text-slate-300">
-                <p>A5</p><p>₹500</p>
-                <p>A4</p><p>₹900</p>
-                <p>A3</p><p>₹1,500</p>
-                <p>A2</p><p>₹2,500</p>
-              </div>
-            </div>
+    <div className="mt-3 grid grid-cols-2 gap-2 text-slate-300">
+      <p>A5</p>
+      <p>₹350</p>
 
-            {/* Color Pencil Art */}
-            <div className="mt-8">
-              <h3 className="text-xl font-semibold text-white">
-                🎨 Color Pencil Art
-              </h3>
+      <p>A4</p>
+      <p>₹500</p>
 
-              <div className="mt-3 grid grid-cols-2 gap-2 text-slate-300">
-                <p>A5</p><p>₹800</p>
-                <p>A4</p><p>₹1,400</p>
-                <p>A3</p><p>₹2,200</p>
-                <p>A2</p><p>₹3,500</p>
-              </div>
-            </div>
+      <p>A3</p>
+      <p>₹800</p>
 
-            {/* Acrylic Painting */}
-            <div className="mt-8">
-              <h3 className="text-xl font-semibold text-white">
-                🖌️ Acrylic Painting
-              </h3>
+      <p>A2</p>
+      <p>₹1,000</p>
+    </div>
+  </div>
 
-              <div className="mt-3 grid grid-cols-2 gap-2 text-slate-300">
-                <p>A5</p><p>₹1,000</p>
-                <p>A4</p><p>₹1,800</p>
-                <p>A3</p><p>₹3,000</p>
-                <p>A2</p><p>₹4,800</p>
-              </div>
-            </div>
+  {/* Charcoal Art */}
+  <div className="mt-8">
+    <h3 className="text-xl font-semibold text-white">
+      🎨 Charcoal Art
+    </h3>
 
-            {/* Important Information */}
-            <div className="mt-10 rounded-xl border border-amber-500/30 bg-slate-800 p-5">
-              <h3 className="text-lg font-semibold text-amber-400">
-                📌 Important Information
-              </h3>
+    <div className="mt-3 grid grid-cols-2 gap-2 text-slate-300">
+      <p>A5</p>
+      <p>₹300</p>
 
-              <ul className="mt-4 space-y-3 text-sm text-slate-300">
-                <li>
-                  👤 Prices listed are for a <strong>single-person portrait</strong>.
-                </li>
+      <p>A4</p>
+      <p>₹450</p>
 
-                <li>
-                  👨‍👩‍👧 Additional charges apply for{" "}
-                  <strong>multiple people</strong> in the same artwork.
-                </li>
+      <p>A3</p>
+      <p>₹750</p>
 
-                <li>
-                  🐶 Pets, vehicles, or detailed backgrounds may require
-                  additional charges.
-                </li>
+      <p>A2</p>
+      <p>₹950</p>
+    </div>
+  </div>
 
-                
-                <li>
-    💰 A <strong>50% advance payment</strong> is required to confirm your order.
-  </li>
+  {/* Pixel Art */}
+  <div className="mt-8">
+    <h3 className="text-xl font-semibold text-white">
+      🖌️ Pixel Art
+    </h3>
 
-  <li>
-    💳 The remaining <strong>50% payment</strong> must be completed before shipping or delivery.
-  </li>
+    <div className="mt-3 grid grid-cols-2 gap-2 text-slate-300">
+      <p>A5</p>
+      <p>₹550</p>
 
-                <li>
-                  📷 Upload a clear, high-resolution reference image for the
-                  best results.
-                </li>
+      <p>A4</p>
+      <p>₹700</p>
 
-                <li>
-                  ⏳ Estimated completion time: <strong>5–10 working days</strong>.
-                </li>
+      <p>A3</p>
+      <p>₹1,000</p>
 
-                <li>
-                  💬 The final quotation will be shared after reviewing your
-                  reference image.
-                </li>
-              </ul>
-            </div>
-          </div>
+      <p>A2</p>
+      <p>₹1,200</p>
+    </div>
+  </div>
+
+  {/* Important Information */}
+  <div className="mt-10 rounded-xl border border-amber-500/30 bg-slate-800 p-5">
+
+    <h3 className="text-lg font-semibold text-amber-400">
+      📌 Important Information
+    </h3>
+
+    <ul className="mt-4 space-y-3 text-sm text-slate-300">
+
+      <li>
+        👤 Prices listed are for a{" "}
+        <strong>single-person portrait</strong>.
+      </li>
+
+      <li>
+        ✏️ <strong>Graphite Art:</strong> ₹150 for each
+        additional person.
+      </li>
+
+      <li>
+        🎨 <strong>Charcoal Art:</strong> ₹100 for each
+        additional person.
+      </li>
+
+      <li>
+        🖌️ <strong>Pixel Art:</strong> ₹200 for each
+        additional person.
+      </li>
+
+      <li>
+        🚚 <strong>Post / Courier:</strong> Additional ₹50
+        delivery charge.
+      </li>
+
+      <li>
+        🤝 <strong>In-Hand / Pickup:</strong> No delivery
+        charge.
+      </li>
+
+      <li>
+        💰 A <strong>40% advance payment</strong> is required
+        to confirm your order.
+      </li>
+
+      <li>
+        💳 The remaining <strong>60% payment</strong> must be
+        completed before shipping or delivery.
+      </li>
+
+      <li>
+        📷 Upload a clear, high-resolution reference image for
+        the best results.
+      </li>
+
+      <li>
+        ⏳ Estimated completion time:{" "}
+        <strong>5–10 working days</strong>.
+      </li>
+
+      <li>
+        💬 The final quotation will be shared after reviewing
+        your reference image.
+      </li>
+
+    </ul>
+  </div>
+
+</div>
 
         </div>
       </div>

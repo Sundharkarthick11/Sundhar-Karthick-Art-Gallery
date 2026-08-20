@@ -9,18 +9,21 @@ const DashboardStats = ({ orders }) => {
     (order) => order.orderStatus === "Completed"
   ).length;
 
-  const totalRevenue = orders.reduce(
-    (sum, order) => sum + Number(order.estimatedPrice || 0),
+  const revenue = orders.reduce(
+    (total, order) =>
+      total + Number(order.estimatedPrice || 0),
     0
   );
 
-  const totalAdvance = orders.reduce(
-    (sum, order) => sum + Number(order.advanceAmount || 0),
+  const advance = orders.reduce(
+    (total, order) =>
+      total + Number(order.advanceAmount || 0),
     0
   );
 
-  const totalBalance = orders.reduce(
-    (sum, order) => sum + Number(order.balanceAmount || 0),
+  const balance = orders.reduce(
+    (total, order) =>
+      total + Number(order.balanceAmount || 0),
     0
   );
 
@@ -28,48 +31,42 @@ const DashboardStats = ({ orders }) => {
     {
       title: "Total Orders",
       value: totalOrders,
-      color: "bg-blue-600",
     },
     {
       title: "Pending",
       value: pendingOrders,
-      color: "bg-yellow-500",
     },
     {
       title: "Completed",
       value: completedOrders,
-      color: "bg-green-600",
     },
     {
       title: "Revenue",
-      value: `₹${totalRevenue}`,
-      color: "bg-purple-600",
+      value: `₹${revenue}`,
     },
     {
       title: "Advance",
-      value: `₹${totalAdvance}`,
-      color: "bg-amber-500",
+      value: `₹${advance}`,
     },
     {
       title: "Balance",
-      value: `₹${totalBalance}`,
-      color: "bg-red-600",
+      value: `₹${balance}`,
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mt-8">
-      {stats.map((item) => (
+    <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      {stats.map((stat) => (
         <div
-          key={item.title}
-          className={`${item.color} rounded-xl p-5 shadow-lg text-center`}
+          key={stat.title}
+          className="rounded-xl border border-slate-700 bg-slate-800/80 p-5 shadow-sm transition hover:border-slate-600"
         >
-          <h3 className="text-sm text-white opacity-90">
-            {item.title}
-          </h3>
+          <p className="text-sm font-medium text-slate-400">
+            {stat.title}
+          </p>
 
-          <p className="text-3xl font-bold text-white mt-2">
-            {item.value}
+          <p className="mt-3 text-2xl font-bold text-white">
+            {stat.value}
           </p>
         </div>
       ))}
