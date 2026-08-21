@@ -330,240 +330,259 @@ const toggleFeatured = async (
   </div>
 </div>
 
-        <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900 p-6">
 
-          <div className="grid md:grid-cols-2 gap-6">
+        <div className="mt-8 grid lg:grid-cols-2 gap-8">
 
-            <input
-              type="text"
-              placeholder="Artwork Title"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
-              className="rounded-lg bg-slate-950 border border-slate-700 p-3"
-            />
+  {/* LEFT SIDE - ADD ARTWORK */}
 
-            <select
-              value={category}
-              onChange={(e) =>
-                setCategory(e.target.value)
-              }
-              className="rounded-lg bg-slate-950 border border-slate-700 p-3"
-            >
-              {categories.map((cat) => (
-                <option key={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+  <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
 
-          </div>
+    <h2 className="mb-6 text-3xl font-bold text-emerald-400">
+      Add Artwork
+    </h2>
 
-          <textarea
-            rows="4"
-            placeholder="Description"
-            value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
-            className="mt-5 w-full rounded-lg bg-slate-950 border border-slate-700 p-3"
-          />
+    <div className="grid md:grid-cols-2 gap-6">
 
-          <div className="mt-5">
+      <input
+        type="text"
+        placeholder="Artwork Title"
+        value={title}
+        onChange={(e) =>
+          setTitle(e.target.value)
+        }
+        className="rounded-lg bg-slate-950 border border-slate-700 p-3"
+      />
 
-            <label className="flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-700 p-8 hover:border-emerald-400">
+      <select
+        value={category}
+        onChange={(e) =>
+          setCategory(e.target.value)
+        }
+        className="rounded-lg bg-slate-950 border border-slate-700 p-3"
+      >
+        {categories.map((cat) => (
+          <option key={cat}>
+            {cat}
+          </option>
+        ))}
+      </select>
 
-              <div className="text-center">
+    </div>
 
-                <p className="text-lg">
-                  📷 Choose Artwork Image
-                </p>
+    <textarea
+      rows="4"
+      placeholder="Description"
+      value={description}
+      onChange={(e) =>
+        setDescription(e.target.value)
+      }
+      className="mt-5 w-full rounded-lg bg-slate-950 border border-slate-700 p-3"
+    />
 
-                {image && (
-                  <p className="mt-2 text-emerald-400">
-                    {image.name}
-                  </p>
-                )}
+    <div className="mt-5">
 
-              </div>
+      <label className="flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-700 p-8 hover:border-emerald-400">
 
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file =
-                    e.target.files[0];
+        <div className="text-center">
 
-                  setImage(file);
+          <p className="text-lg">
+            📷 Choose Artwork Image
+          </p>
 
-                  if (file) {
-                    setPreviewUrl(
-                      URL.createObjectURL(
-                        file
-                      )
-                    );
-                  }
-                }}
-              />
-
-            </label>
-
-            {previewUrl && (
-              <img
-                src={previewUrl}
-                alt="Preview"
-                className="mt-5 h-72 w-full rounded-xl border border-slate-700 object-cover"
-              />
-            )}
-
-          </div>
-
-          <label className="mt-5 flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={featured}
-              onChange={() =>
-                setFeatured(!featured)
-              }
-            />
-
-            Featured Artwork
-          </label>
-
-          <div className="mt-6 flex gap-3">
-
-            {editingId ? (
-              <>
-                <button
-                  onClick={updateArtwork}
-                  className="flex-1 rounded-lg bg-blue-600 py-3 font-semibold hover:bg-blue-700"
-                >
-                  Update Artwork
-                </button>
-
-                <button
-                  onClick={resetForm}
-                  className="flex-1 rounded-lg bg-slate-700 py-3 font-semibold"
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={uploadArtwork}
-                className="w-full rounded-lg bg-emerald-600 py-3 font-semibold hover:bg-emerald-700"
-              >
-                Upload Artwork
-              </button>
-            )}
-
-          </div>
+          {image && (
+            <p className="mt-2 text-emerald-400">
+              {image.name}
+            </p>
+          )}
 
         </div>
 
         <input
-          type="text"
-          placeholder="Search artwork..."
-          value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
-          className="mt-8 w-full rounded-lg border border-slate-700 bg-slate-900 p-3"
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file =
+              e.target.files[0];
+
+            setImage(file);
+
+            if (file) {
+              setPreviewUrl(
+                URL.createObjectURL(file)
+              );
+            }
+          }}
         />
-        <select
-  value={filterCategory}
-  onChange={(e) =>
-    setFilterCategory(e.target.value)
-  }
-  className="mt-4 w-full rounded-lg border border-slate-700 bg-slate-900 p-3"
->
-  <option value="All">
-    All Categories
-  </option>
 
-  {categories.map((cat) => (
-    <option
-      key={cat}
-      value={cat}
+      </label>
+
+      {previewUrl && (
+        <img
+          src={previewUrl}
+          alt="Preview"
+          className="mt-5 h-72 w-full rounded-xl border border-slate-700 object-cover"
+        />
+      )}
+
+    </div>
+
+    <label className="mt-5 flex items-center gap-3">
+      <input
+        type="checkbox"
+        checked={featured}
+        onChange={() =>
+          setFeatured(!featured)
+        }
+      />
+      Featured Artwork
+    </label>
+
+    <div className="mt-6 flex gap-3">
+
+      {editingId ? (
+        <>
+          <button
+            onClick={updateArtwork}
+            className="flex-1 rounded-lg bg-blue-600 py-3 font-semibold hover:bg-blue-700"
+          >
+            Update Artwork
+          </button>
+
+          <button
+            onClick={resetForm}
+            className="flex-1 rounded-lg bg-slate-700 py-3 font-semibold"
+          >
+            Cancel
+          </button>
+        </>
+      ) : (
+        <button
+          onClick={uploadArtwork}
+          className="w-full rounded-lg bg-emerald-600 py-3 font-semibold hover:bg-emerald-700"
+        >
+          Upload Artwork
+        </button>
+      )}
+
+    </div>
+
+  </div>
+
+  {/* RIGHT SIDE - MANAGE ARTWORKS */}
+
+  <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+
+    <h2 className="mb-6 text-3xl font-bold text-amber-400">
+      Manage Artworks
+    </h2>
+
+    <input
+      type="text"
+      placeholder="Search artwork..."
+      value={search}
+      onChange={(e) =>
+        setSearch(e.target.value)
+      }
+      className="w-full rounded-lg border border-slate-700 bg-slate-950 p-3"
+    />
+
+    <select
+      value={filterCategory}
+      onChange={(e) =>
+        setFilterCategory(e.target.value)
+      }
+      className="mt-4 w-full rounded-lg border border-slate-700 bg-slate-950 p-3"
     >
-      {cat}
-    </option>
-  ))}
-</select>
+      <option value="All">
+        All Categories
+      </option>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {categories.map((cat) => (
+        <option
+          key={cat}
+          value={cat}
+        >
+          {cat}
+        </option>
+      ))}
+    </select>
 
-          {filteredArtworks.map((artwork) => (
+    <div className="mt-6 space-y-4 max-h-[900px] overflow-y-auto pr-2">
 
-            <div
-              key={artwork._id}
-              className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900"
+      {filteredArtworks.map((artwork) => (
+
+        <div
+          key={artwork._id}
+          className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950"
+        >
+
+          <img
+            src={artwork.imageUrl}
+            alt={artwork.title}
+            className="h-56 w-full object-cover"
+          />
+
+          <div className="p-5">
+
+            <h3 className="text-xl font-bold">
+              {artwork.title}
+            </h3>
+
+            <p className="mt-2 text-slate-400">
+              {artwork.category}
+            </p>
+
+            <button
+              onClick={() =>
+                toggleFeatured(artwork)
+              }
+              className={`mt-3 rounded-full px-3 py-1 text-xs font-semibold ${
+                artwork.featured
+                  ? "bg-amber-500 text-black"
+                  : "bg-slate-700 text-white"
+              }`}
             >
+              {artwork.featured
+                ? "⭐ Featured"
+                : "☆ Make Featured"}
+            </button>
 
-              <img
-                src={artwork.imageUrl}
-                alt={artwork.title}
-                className="h-64 w-full object-cover"
-              />
+            <div className="mt-5 flex gap-3">
 
-              <div className="p-5">
+              <button
+                onClick={() =>
+                  startEdit(artwork)
+                }
+                className="flex-1 rounded-lg bg-blue-600 py-2 font-semibold"
+              >
+                Edit
+              </button>
 
-                <h3 className="text-xl font-bold">
-                  {artwork.title}
-                </h3>
-
-                <p className="mt-2 text-slate-400">
-                  {artwork.category}
-                </p>
-
-                <button
-  onClick={() =>
-    toggleFeatured(artwork)
-  }
-  className={`mt-3 rounded-full px-3 py-1 text-xs font-semibold ${
-    artwork.featured
-      ? "bg-amber-500 text-black"
-      : "bg-slate-700 text-white"
-  }`}
->
-  {artwork.featured
-    ? "⭐ Featured"
-    : "☆ Make Featured"}
-</button>
-
-                <div className="mt-5 flex gap-3">
-
-                  <button
-                    onClick={() =>
-                      startEdit(artwork)
-                    }
-                    className="flex-1 rounded-lg bg-blue-600 py-2 font-semibold"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      deleteArtwork(
-                        artwork._id
-                      )
-                    }
-                    className="flex-1 rounded-lg bg-red-600 py-2 font-semibold"
-                  >
-                    Delete
-                  </button>
-
-                </div>
-
-              </div>
+              <button
+                onClick={() =>
+                  deleteArtwork(
+                    artwork._id
+                  )
+                }
+                className="flex-1 rounded-lg bg-red-600 py-2 font-semibold"
+              >
+                Delete
+              </button>
 
             </div>
 
-          ))}
+          </div>
 
         </div>
+
+      ))}
+
+    </div>
+
+  </div>
+
+</div>
 
       </div>
 

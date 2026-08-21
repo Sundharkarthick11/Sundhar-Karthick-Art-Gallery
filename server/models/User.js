@@ -34,7 +34,8 @@ const userSchema = new mongoose.Schema(
     },
     savedArtworks: [
   {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Artwork",
   },
 ],
   },
