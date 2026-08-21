@@ -102,9 +102,9 @@ export default function UserAccount() {
               Saved Artworks
             </h2>
 
-            <p className="mt-2 text-4xl font-bold text-amber-400">
-              {savedArtworks.length}
-            </p>
+           <p className="mt-2 text-slate-400">
+  View your saved artwork collection
+</p>
 
             <button
               onClick={() => navigate("/saved-artworks")}
@@ -131,12 +131,12 @@ export default function UserAccount() {
               Track your portrait orders.
             </p>
 
-            <button
-              onClick={() => navigate("/track-order")}
-              className="mt-5 text-amber-400 hover:text-amber-300"
-            >
-              View Orders →
-            </button>
+           <button
+  onClick={() => navigate("/my-orders")}
+  className="mt-5 text-amber-400 hover:text-amber-300"
+>
+  View Orders →
+</button>
 
           </div>
 
@@ -164,11 +164,11 @@ export default function UserAccount() {
             </button>
 
             <button
-              onClick={() => navigate("/my-orders")}
-              className="rounded-lg border border-slate-700 px-6 py-3 text-white transition hover:border-amber-400"
-            >
-              Order Portrait
-            </button>
+  onClick={() => navigate("/order")}
+  className="rounded-lg border border-slate-700 px-6 py-3 text-white transition hover:border-amber-400"
+>
+  Order Portrait
+</button>
 
           </div>
 

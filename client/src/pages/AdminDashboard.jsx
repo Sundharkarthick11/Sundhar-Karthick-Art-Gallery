@@ -17,20 +17,29 @@ const AdminDashboard = () => {
   }, []);
 
   const fetchOrders = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/orders`
-      );
+  try {
+    const token = localStorage.getItem("adminToken");
 
-      const data = await response.json();
-
-      if (data.success) {
-        setOrders(data.orders);
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/orders`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (error) {
-      console.error(error);
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      setOrders(data.orders);
+    } else {
+      console.log(data.message);
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const logout = () => {
     localStorage.removeItem("adminToken");

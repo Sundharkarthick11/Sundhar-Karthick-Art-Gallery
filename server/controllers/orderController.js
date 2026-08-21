@@ -24,10 +24,12 @@ const createOrder = async (req, res) => {
       "0"
     )}`;
 
-    const order = await Order.create({
-      ...req.body,
-      orderId,
-    });
+   
+const order = await Order.create({
+  ...req.body,
+  orderId,
+  user: req.user.userId,
+});
 
     // Send confirmation email
     await sendEmail({
@@ -140,6 +142,28 @@ const getAllOrders = async (req, res) => {
     });
   }
 };
+// ===============================
+// GET MY ORDERS
+// ===============================
+const getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({
+      user: req.user.userId,
+    }).sort({
+      createdAt: -1,
+    });
+
+    res.json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 // ===============================
 // UPDATE ORDER STATUS
@@ -176,24 +200,23 @@ const updateOrderStatus = async (req, res) => {
 // ===============================
 const trackOrder = async (req, res) => {
   try {
-    const { email } = req.params;
+    const { orderId, email } = req.body;
 
-    const orders = await Order.find({
+    const order = await Order.findOne({
+      orderId,
       email: email.toLowerCase(),
-    }).sort({
-      createdAt: -1,
     });
 
-    if (orders.length === 0) {
+    if (!order) {
       return res.status(404).json({
         success: false,
-        message: "No orders found.",
+        message: "Order not found.",
       });
     }
 
     res.json({
       success: true,
-      orders,
+      order,
     });
   } catch (error) {
     res.status(500).json({
@@ -369,4 +392,5 @@ module.exports = {
   trackOrderById,
   uploadCompletedPortrait,
   deleteOrder,
+  getMyOrders,
 };

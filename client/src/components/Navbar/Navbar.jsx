@@ -29,9 +29,9 @@ export default function Navbar() {
       path: "/order",
     },
     {
-      name: "Track My Order",
-      path: "/track-order",
-    },
+  name: "My Orders",
+  path: "/my-orders",
+},
     {
       name: "Contact",
       path: "/contact",
