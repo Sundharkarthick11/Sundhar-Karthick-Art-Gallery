@@ -246,10 +246,87 @@ const googleLogin = async (req, res) => {
     });
   }
 };
+// ==========================================
+// TOGGLE SAVED ARTWORK
+// ==========================================
 
+const toggleSavedArtwork = async (
+  req,
+  res
+) => {
+  try {
+    const { artworkId } = req.body;
+
+    const user = await User.findById(
+      req.user.userId
+    );
+
+    const alreadySaved =
+      user.savedArtworks.some(
+        (id) => id.toString() === artworkId
+      );
+
+    if (alreadySaved) {
+      user.savedArtworks =
+        user.savedArtworks.filter(
+          (id) =>
+            id.toString() !== artworkId
+        );
+    } else {
+      user.savedArtworks.push(
+        artworkId
+      );
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      savedArtworks:
+        user.savedArtworks,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ==========================================
+// GET SAVED ARTWORKS
+// ==========================================
+
+const getSavedArtworks = async (
+  req,
+  res
+) => {
+  try {
+    const user = await User.findById(
+      req.user.userId
+    ).populate("savedArtworks");
+
+    res.json({
+      success: true,
+      artworks:
+        user.savedArtworks,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   signup,
   login,
   googleLogin,
+  toggleSavedArtwork,
+  getSavedArtworks,
 };

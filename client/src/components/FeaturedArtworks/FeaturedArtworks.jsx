@@ -11,7 +11,7 @@ export default function FeaturedArtworks() {
   const fetchFeaturedArtworks = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/artworks/featured"
+        `${import.meta.env.VITE_API_URL}/api/artworks/featured`
       );
 
       const data = await response.json();

@@ -5,6 +5,7 @@ import GallerySearch from "./GallerySearch";
 import GalleryFilter from "./GalleryFilter";
 import GalleryGrid from "./GalleryGrid";
 import GalleryModal from "./GalleryModal";
+console.log(import.meta.env.VITE_API_URL);
 
 const galleryCategories = [
   "All",
@@ -27,15 +28,7 @@ export default function GallerySection() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedArtwork, setSelectedArtwork] = useState(null);
 
-  const [savedArtworks, setSavedArtworks] = useState(() => {
-    try {
-      const saved = localStorage.getItem("savedArtworks");
-      return saved ? JSON.parse(saved) : [];
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  });
+  const [savedArtworks, setSavedArtworks] = useState([]);
 
   const [showSavedOnly, setShowSavedOnly] = useState(false);
 
@@ -43,16 +36,17 @@ export default function GallerySection() {
   // FETCH ARTWORKS FROM MONGODB
   // ==========================================
 
-  useEffect(() => {
-    fetchArtworks();
-  }, []);
+ useEffect(() => {
+  fetchArtworks();
+  fetchSavedArtworks();
+}, []);
 
   const fetchArtworks = async () => {
   try {
     setLoading(true);
 
     const response = await fetch(
-      "http://localhost:5000/api/artworks"
+      `${import.meta.env.VITE_API_URL}/api/artworks`
     );
 
     const data = await response.json();
@@ -66,36 +60,77 @@ export default function GallerySection() {
     setLoading(false);
   }
 };
+const fetchSavedArtworks = async () => {
+  try {
+    const token =
+      localStorage.getItem("userToken");
+
+    if (!token) return;
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/saved-artworks`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+ if (data.success) {
+      setSavedArtworks(
+        data.artworks.map(
+          (art) => art._id
+        )
+      );
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   // ==========================================
   // SAVE ARTWORKS
   // ==========================================
 
-  useEffect(() => {
-    localStorage.setItem(
-      "savedArtworks",
-      JSON.stringify(savedArtworks)
-    );
-  }, [savedArtworks]);
+ 
 
-  const toggleSave = (artworkId) => {
-    const user = JSON.parse(
-      localStorage.getItem("user") || "null"
-    );
+  const toggleSave = async (
+  artworkId
+) => {
+  const token =
+  localStorage.getItem("userToken");
 
-    if (!user) {
-      navigate("/login");
-      return;
-    }
+  if (!token) {
+    navigate("/login");
+    return;
+  }
 
-    setSavedArtworks((prev) => {
-      if (prev.includes(artworkId)) {
-        return prev.filter((id) => id !== artworkId);
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/saved-artworks/${artworkId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
+    );
 
-      return [...prev, artworkId];
-    });
-  };
+    const data =
+      await response.json();
+if (data.success) {
+  setSavedArtworks(
+    data.savedArtworks.map((id) =>
+      id.toString()
+    )
+  );
+}
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const handleSavedClick = () => {
     const user = JSON.parse(

@@ -15,8 +15,8 @@ const TrackOrder = () => {
     try {
       const url =
         searchType === "email"
-          ? `http://localhost:5000/api/orders/track/${searchValue}`
-          : `http://localhost:5000/api/orders/track/order/${searchValue}`;
+          ? `${import.meta.env.VITE_API_URL}/api/orders/track/${searchValue}`
+          : `${import.meta.env.VITE_API_URL}/api/orders/track/order/${searchValue}`;
 
       const response = await fetch(url);
       const data = await response.json();

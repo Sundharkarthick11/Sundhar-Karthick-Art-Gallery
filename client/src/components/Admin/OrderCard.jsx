@@ -41,7 +41,7 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
       const token = localStorage.getItem("adminToken");
 
       const response = await fetch(
-        `http://localhost:5000/api/orders/${order._id}`,
+        `${import.meta.env.VITE_API_URL}/api/orders/${order._id}`,
         {
           method: "PUT",
           headers: {
@@ -82,7 +82,7 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
       const token = localStorage.getItem("adminToken");
 
       const response = await fetch(
-        `http://localhost:5000/api/orders/${order._id}`,
+        `${import.meta.env.VITE_API_URL}/api/orders/${order._id}`,
         {
           method: "DELETE",
           headers: {
@@ -144,7 +144,7 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
         const token = localStorage.getItem("adminToken");
 
         const response = await fetch(
-          `http://localhost:5000/api/orders/${order._id}/upload`,
+          `${import.meta.env.VITE_API_URL}/api/orders/${order._id}/upload`,
           {
             method: "PUT",
             headers: {

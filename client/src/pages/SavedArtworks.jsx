@@ -1,13 +1,55 @@
-import galleryData from "../features/gallery/data/galleryData";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SavedArtworks() {
-  const savedArtworks = JSON.parse(
-    localStorage.getItem("savedArtworks") || "[]"
-  );
+  const navigate = useNavigate();
 
-  const savedItems = galleryData.filter((artwork) =>
-    savedArtworks.includes(artwork.id)
-  );
+  const [savedItems, setSavedItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSavedArtworks();
+  }, []);
+
+  const fetchSavedArtworks = async () => {
+    try {
+      const token =
+        localStorage.getItem("userToken");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(
+  `${import.meta.env.VITE_API_URL}/api/saved-artworks`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
+      const data = await response.json();
+
+      if (data.success) {
+  console.log(data.artworks);
+  setSavedItems(data.artworks);
+}
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
+        Loading saved artworks...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 px-6 py-16">
@@ -35,11 +77,11 @@ export default function SavedArtworks() {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {savedItems.map((artwork) => (
               <div
-                key={artwork.id}
+                key={artwork._id}
                 className="overflow-hidden rounded-2xl bg-slate-900"
               >
                 <img
-                  src={artwork.image}
+                  src={artwork.imageUrl}
                   alt={artwork.title}
                   className="h-80 w-full object-cover"
                 />

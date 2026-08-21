@@ -35,7 +35,7 @@ export default function AdminArtworks() {
   const fetchArtworks = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/artworks"
+        `${import.meta.env.VITE_API_URL}/api/artworks`
       );
 
       const data = await response.json();
@@ -84,7 +84,7 @@ export default function AdminArtworks() {
         localStorage.getItem("adminToken");
 
       const response = await fetch(
-  `http://localhost:5000/api/artworks/${artwork._id}`,
+  `${import.meta.env.VITE_API_URL}/api/artworks/${artwork._id}`,
         {
           method: "POST",
           headers: {
@@ -129,7 +129,7 @@ export default function AdminArtworks() {
 
       const response = await fetch(
         fetch(
-  "http://localhost:5000/api/artworks"
+  `${import.meta.env.VITE_API_URL}/api/artworks`
 ),
         {
           method: "DELETE",
@@ -186,7 +186,7 @@ export default function AdminArtworks() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/artworks/${editingId}`,
+        `${import.meta.env.VITE_API_URL}/api/artworks/${editingId}`,
         {
           method: "PUT",
           headers: {
@@ -258,7 +258,7 @@ const toggleFeatured = async (
       );
 
     const response = await fetch(
-      `http://localhost:5000/api/artworks/${artwork._id}`,
+      `${import.meta.env.VITE_API_URL}/api/artworks/${artwork._id}`,
       {
         method: "PUT",
         headers: {

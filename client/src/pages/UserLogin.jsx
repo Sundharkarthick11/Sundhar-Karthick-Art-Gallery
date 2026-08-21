@@ -43,7 +43,7 @@ export default function UserLogin() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/users/login",
+  `${import.meta.env.VITE_API_URL}/api/users/login`,
         {
           method: "POST",
           headers: {
@@ -91,7 +91,7 @@ export default function UserLogin() {
       setLoading(true);
 
       const result = await fetch(
-        "http://localhost:5000/api/users/google",
+        `${import.meta.env.VITE_API_URL}/api/users/google`,
         {
           method: "POST",
           headers: {

@@ -1,46 +1,73 @@
 const User = require("../models/User");
 
-const toggleSavedArtwork = async (req, res) => {
+const Artwork = require("../models/Artwork");
+
+const getSavedArtworks = async (req, res) => {
   try {
-    const { userId, artworkId } = req.body;
-
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    const alreadySaved =
-      user.savedArtworks.includes(artworkId);
-
-    if (alreadySaved) {
-      user.savedArtworks =
-        user.savedArtworks.filter(
-          (id) => id !== artworkId
-        );
-    } else {
-      user.savedArtworks.push(artworkId);
-    }
-
-    await user.save();
+    const user = await User.findById(
+      req.admin.userId
+    ).populate("savedArtworks");
 
     res.json({
       success: true,
-      savedArtworks: user.savedArtworks,
+      artworks: user.savedArtworks,
     });
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Server error",
+    });
+  }
+};
+
+const toggleSavedArtwork = async (
+  req,
+  res
+) => {
+  try {
+    const { artworkId } = req.params;
+
+    const user = await User.findById(
+      req.admin.userId
+    );
+
+    const alreadySaved =
+      user.savedArtworks.includes(
+        artworkId
+      );
+
+    if (alreadySaved) {
+      user.savedArtworks =
+        user.savedArtworks.filter(
+          (id) =>
+            id.toString() !== artworkId
+        );
+    } else {
+      user.savedArtworks.push(
+        artworkId
+      );
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      savedArtworks:
+        user.savedArtworks,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
     });
   }
 };
 
 module.exports = {
+  getSavedArtworks,
   toggleSavedArtwork,
 };

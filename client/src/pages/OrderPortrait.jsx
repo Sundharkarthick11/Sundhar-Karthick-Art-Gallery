@@ -171,7 +171,7 @@ try {
   console.log("Step 2 - Image uploaded");
   console.log("Step 3 - Creating Razorpay Order...");
   const paymentResponse = await fetch(
-  "http://localhost:5000/api/payment/create-order",
+  `${import.meta.env.VITE_API_URL}/api/payment/create-order`,
   {
     method: "POST",
     headers: {
@@ -213,7 +213,7 @@ const options = {
   
   // Payment verification 
   const verifyResponse = await fetch(
-  "http://localhost:5000/api/payment/verify",
+  `${import.meta.env.VITE_API_URL}/api/payment/verify`,
   {
     method: "POST",
     headers: {
@@ -266,7 +266,7 @@ deliveryAddress:
   try {
 
     const saveResponse = await fetch(
-      "http://localhost:5000/api/orders",
+      `${import.meta.env.VITE_API_URL}/api/orders`,
       {
         method: "POST",
         headers: {
@@ -319,7 +319,7 @@ deliveryAddress:
   ondismiss: async function () {
     console.log("Payment cancelled.");
 
-    await fetch("http://localhost:5000/api/cloudinary/delete", {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/cloudinary/delete`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

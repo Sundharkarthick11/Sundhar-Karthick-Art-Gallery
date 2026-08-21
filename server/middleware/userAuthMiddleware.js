@@ -1,13 +1,14 @@
 const jwt = require("jsonwebtoken");
 
-const protect = (req, res, next) => {
+const userProtect = (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const token =
+      req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: "Not authorized.",
+        message: "Not authorized",
       });
     }
 
@@ -16,17 +17,15 @@ const protect = (req, res, next) => {
       process.env.JWT_SECRET
     );
 
-    req.admin = decoded;
     req.user = decoded;
 
     next();
-
   } catch (error) {
-    res.status(401).json({
+    return res.status(401).json({
       success: false,
-      message: "Invalid token.",
+      message: "Invalid token",
     });
   }
 };
 
-module.exports = protect;
+module.exports = userProtect;

@@ -27,7 +27,7 @@ export default function UserSignup() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/users/signup",
+        `${import.meta.env.VITE_API_URL}/api/users/signup`,
         {
           method: "POST",
           headers: {

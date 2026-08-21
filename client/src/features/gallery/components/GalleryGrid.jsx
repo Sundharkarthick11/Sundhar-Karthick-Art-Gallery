@@ -10,10 +10,12 @@ export default function GalleryGrid({
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {artworks.map((artwork) => (
         <GalleryCard
-          key={artwork.id}
+          key={artwork._id}
           artwork={artwork}
           onViewDetails={onViewDetails}
-          isSaved={savedArtworks.includes(artwork.id)}
+          isSaved={savedArtworks.includes(
+            artwork._id
+          )}
           onToggleSave={onToggleSave}
         />
       ))}
