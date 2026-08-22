@@ -84,17 +84,17 @@ const order = await Order.create({
 
       <div style="margin-top:35px;text-align:center;">
 
-      <a href="http://localhost:5173/track-order"
-      style="
-      background:#f59e0b;
-      color:white;
-      padding:14px 28px;
-      text-decoration:none;
-      border-radius:8px;
-      font-weight:bold;
-      ">
-      Track My Order
-      </a>
+      <a href="${process.env.CLIENT_URL}/my-orders"
+  style="
+  background:#f59e0b;
+  color:white;
+  padding:14px 28px;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:bold;
+  ">
+  View My Orders
+</a>
 
       </div>
 
@@ -322,7 +322,7 @@ const uploadCompletedPortrait = async (req, res) => {
       <div style="margin-top:35px;text-align:center;">
 
       <a
-      href="http://localhost:5173/track-order"
+      href="${process.env.CLIENT_URL}/my-orders"
       style="
       background:#22c55e;
       color:white;
