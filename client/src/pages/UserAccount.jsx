@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function UserAccount() {
   const navigate = useNavigate();
@@ -7,16 +8,71 @@ export default function UserAccount() {
     localStorage.getItem("user") || "null"
   );
 
-  const savedArtworks = JSON.parse(
-    localStorage.getItem("savedArtworks") || "[]"
-  );
-
+  
   const handleLogout = () => {
     localStorage.removeItem("userToken");
     localStorage.removeItem("user");
 
     navigate("/login");
   };
+  const handleChangePassword = async () => {
+  if (
+    !currentPassword ||
+    !newPassword ||
+    !confirmPassword
+  ) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  try {
+    const token =
+      localStorage.getItem("userToken");
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/users/change-password`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert("Password updated successfully.");
+
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } else {
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Server error");
+  }
+};
+  const [currentPassword, setCurrentPassword] =
+  useState("");
+
+const [newPassword, setNewPassword] =
+  useState("");
+
+const [confirmPassword, setConfirmPassword] =
+  useState("");
 
   if (!user) {
     navigate("/login");
@@ -173,6 +229,59 @@ export default function UserAccount() {
           </div>
 
         </div>
+
+        <div className="mt-12 rounded-2xl border border-slate-800 bg-slate-900 p-8">
+
+  <h2 className="text-2xl font-bold">
+    Change Password
+  </h2>
+
+  <p className="mt-2 text-slate-400">
+    Update your account password securely.
+  </p>
+
+  <div className="mt-6 space-y-4">
+
+    <input
+      type="password"
+      placeholder="Current Password"
+      value={currentPassword}
+      onChange={(e) =>
+        setCurrentPassword(e.target.value)
+      }
+      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+    />
+
+    <input
+      type="password"
+      placeholder="New Password"
+      value={newPassword}
+      onChange={(e) =>
+        setNewPassword(e.target.value)
+      }
+      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+    />
+
+    <input
+      type="password"
+      placeholder="Confirm New Password"
+      value={confirmPassword}
+      onChange={(e) =>
+        setConfirmPassword(e.target.value)
+      }
+      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+    />
+
+    <button
+      onClick={handleChangePassword}
+      className="rounded-lg bg-amber-500 px-6 py-3 font-semibold text-white hover:bg-amber-600"
+    >
+      Update Password
+    </button>
+
+  </div>
+
+</div>
 
       </div>
     </div>

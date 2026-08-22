@@ -12,6 +12,8 @@ import AdminArtworks from "./pages/AdminArtworks";
 
 import MainLayout from "./layouts/MainLayout";
 import UserLogin from "./pages/UserLogin";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 
 import Home from "./pages/Home";
@@ -115,7 +117,15 @@ export default function App() {
     </ProtectedRoute>
   }
 />
+<Route
+  path="/forgot-password"
+  element={<ForgotPassword />}
+/>
 
+<Route
+  path="/reset-password/:token"
+  element={<ResetPassword />}
+/>
 
 
         {/* ========================================= */}

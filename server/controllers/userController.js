@@ -1,5 +1,7 @@
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const { OAuth2Client } = require("google-auth-library");
+const sendEmail = require("../utils/sendEmail");
 
 const User = require("../models/User");
 const generateUserToken = require("../utils/generateUserToken");
@@ -71,6 +73,111 @@ const signup = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error.",
+    });
+  }
+};
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    const resetToken = crypto
+      .randomBytes(32)
+      .toString("hex");
+
+    user.resetPasswordToken = resetToken;
+
+    user.resetPasswordExpire =
+      Date.now() + 15 * 60 * 1000;
+
+    await user.save();
+
+    const resetUrl =
+      `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: "Reset Your Password",
+      html: `
+      <h2>Password Reset</h2>
+
+      <p>
+      Click the link below to reset your password:
+      </p>
+
+      <a href="${resetUrl}">
+      Reset Password
+      </a>
+
+      <p>
+      This link expires in 15 minutes.
+      </p>
+      `,
+    });
+
+    res.json({
+      success: true,
+      message:
+        "Password reset email sent.",
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired token.",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(
+      password,
+      10
+    );
+
+    user.password = hashedPassword;
+    user.resetPasswordToken = "";
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Password reset successful.",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
@@ -322,6 +429,58 @@ const getSavedArtworks = async (
     });
   }
 };
+const changePassword = async (
+  req,
+  res
+) => {
+  try {
+    const {
+      currentPassword,
+      newPassword,
+    } = req.body;
+
+    const user = await User.findById(
+      req.user.userId
+    );
+
+    const isMatch =
+      await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Current password is incorrect.",
+      });
+    }
+
+    const hashedPassword =
+      await bcrypt.hash(
+        newPassword,
+        10
+      );
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message:
+        "Password updated successfully.",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
 
 module.exports = {
   signup,
@@ -329,4 +488,7 @@ module.exports = {
   googleLogin,
   toggleSavedArtwork,
   getSavedArtworks,
+  changePassword,
+  forgotPassword,
+  resetPassword,
 };

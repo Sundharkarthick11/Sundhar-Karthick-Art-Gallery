@@ -6,6 +6,9 @@ const {
   googleLogin,
   toggleSavedArtwork,
   getSavedArtworks,
+  changePassword,
+  forgotPassword,
+  resetPassword,
 } = require("../controllers/userController");
 
 const userProtect = require(
@@ -25,11 +28,24 @@ router.post(
   userProtect,
   toggleSavedArtwork
 );
+router.put(
+  "/change-password",
+  userProtect,
+  changePassword
+);
 
 router.get(
   "/saved-artworks",
   userProtect,
   getSavedArtworks
+);
+router.post(
+  "/forgot-password",
+  forgotPassword
+);
+router.put(
+  "/reset-password/:token",
+  resetPassword
 );
 
 module.exports = router;
