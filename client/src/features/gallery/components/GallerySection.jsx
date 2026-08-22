@@ -128,11 +128,9 @@ console.log(
 
 if (data.success) {
   setSavedArtworks(
-    [...new Set(
-      data.savedArtworks.map((id) =>
-        id.toString()
-      )
-    )]
+    data.artworks.map(
+      (art) => String(art._id)
+    )
   );
 }
   } catch (error) {

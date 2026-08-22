@@ -14,8 +14,8 @@ export default function GalleryGrid({
           artwork={artwork}
           onViewDetails={onViewDetails}
           isSaved={savedArtworks.includes(
-            artwork._id
-          )}
+  String(artwork._id)
+)}
           onToggleSave={onToggleSave}
         />
       ))}
