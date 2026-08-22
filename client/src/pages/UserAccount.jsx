@@ -124,6 +124,7 @@ const [confirmPassword, setConfirmPassword] =
                 <img
                   src={user.profileImage}
                   alt={user.name}
+                  loading="lazy"
                   className="h-16 w-16 rounded-full object-cover"
                 />
               ) : (

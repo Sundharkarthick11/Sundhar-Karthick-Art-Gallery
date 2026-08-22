@@ -3,8 +3,9 @@ export default function GalleryCard({ artwork }) {
     <div className="group bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500">
 
       <img
-        src={artwork.image}
+        src={artwork.imageUrl}
         alt={artwork.title}
+        loading="lazy"
         className="h-80 w-full object-cover group-hover:scale-105 transition duration-500"
       />
 

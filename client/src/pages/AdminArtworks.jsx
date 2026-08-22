@@ -84,22 +84,22 @@ export default function AdminArtworks() {
         localStorage.getItem("adminToken");
 
       const response = await fetch(
-  `${import.meta.env.VITE_API_URL}/api/artworks/${artwork._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            title,
-            description,
-            category,
-            imageUrl,
-            featured,
-          }),
-        }
-      );
+  `${import.meta.env.VITE_API_URL}/api/artworks`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      title,
+      description,
+      category,
+      imageUrl,
+      featured,
+    }),
+  }
+);
 
       const data = await response.json();
 
@@ -128,17 +128,14 @@ export default function AdminArtworks() {
         localStorage.getItem("adminToken");
 
       const response = await fetch(
-        fetch(
-  `${import.meta.env.VITE_API_URL}/api/artworks`
-),
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+  `${import.meta.env.VITE_API_URL}/api/artworks/${id}`,
+  {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
       const data = await response.json();
 
       if (data.success) {
@@ -168,14 +165,18 @@ export default function AdminArtworks() {
       let imageUrl = previewUrl;
 
       if (image) {
-        const formData = new FormData();
+  const folderName = category
+    .toLowerCase()
+    .replace(/\s+/g, "-");
 
-        formData.append("file", image);
+  const formData = new FormData();
 
-        formData.append(
-  "folder",
-  `Sundhar-Karthick-Art-Gallery/artworks/${folderName}`
-);
+  formData.append("file", image);
+
+  formData.append(
+    "folder",
+    `Sundhar-Karthick-Art-Gallery/artworks/${folderName}`
+  );
 
         const upload = await axios.post(
   "https://api.cloudinary.com/v1_1/cjep3tky/image/upload",
@@ -421,6 +422,7 @@ const toggleFeatured = async (
         <img
           src={previewUrl}
           alt="Preview"
+          loading="lazy"
           className="mt-5 h-72 w-full rounded-xl border border-slate-700 object-cover"
         />
       )}
@@ -520,6 +522,7 @@ const toggleFeatured = async (
           <img
             src={artwork.imageUrl}
             alt={artwork.title}
+            loading="lazy"
             className="h-56 w-full object-cover"
           />
 

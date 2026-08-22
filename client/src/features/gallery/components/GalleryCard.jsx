@@ -23,6 +23,7 @@ export default function GalleryCard({
         <img
           src={artwork.imageUrl}
           alt={artwork.title}
+          loading="lazy"
           onError={(e) => {
             e.target.src =
               "https://placehold.co/600x800?text=Artwork";

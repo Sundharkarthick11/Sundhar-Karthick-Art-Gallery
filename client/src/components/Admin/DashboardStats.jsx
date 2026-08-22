@@ -1,9 +1,10 @@
-const DashboardStats = ({ orders }) => {
+const DashboardStats = ({
+  orders,
+  totalUsers,
+}) => {
   const totalOrders = orders.length;
 
-  const pendingOrders = orders.filter(
-    (order) => order.orderStatus !== "Completed"
-  ).length;
+  
 
   const completedOrders = orders.filter(
     (order) => order.orderStatus === "Completed"
@@ -29,13 +30,14 @@ const DashboardStats = ({ orders }) => {
 
   const stats = [
     {
+      title: "Users",
+      value: totalUsers,
+    },
+    {
       title: "Total Orders",
       value: totalOrders,
     },
-    {
-      title: "Pending",
-      value: pendingOrders,
-    },
+    
     {
       title: "Completed",
       value: completedOrders,
@@ -55,7 +57,7 @@ const DashboardStats = ({ orders }) => {
   ];
 
   return (
-    <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+    <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7">
       {stats.map((stat) => (
         <div
           key={stat.title}

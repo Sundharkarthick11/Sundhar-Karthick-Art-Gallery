@@ -91,10 +91,20 @@ const MyOrders = () => {
                   </div>
 
                   <div>
-                    <span className="px-4 py-2 rounded-full bg-amber-500 text-black font-semibold">
-                      {order.orderStatus}
-                    </span>
-                  </div>
+  <span
+    className={`px-4 py-2 rounded-full font-semibold ${
+      order.orderStatus === "Delivered"
+        ? "bg-purple-500 text-white"
+        : order.orderStatus === "Completed"
+        ? "bg-green-500 text-white"
+        : order.orderStatus === "In Progress"
+        ? "bg-blue-500 text-white"
+        : "bg-amber-500 text-black"
+    }`}
+  >
+    {order.orderStatus}
+  </span>
+</div>
 
                 </div>
 
@@ -109,6 +119,7 @@ const MyOrders = () => {
                     <img
                       src={order.completedImageUrl}
                       alt="Completed Portrait"
+                      loading="lazy"
                       className="rounded-xl max-h-96"
                     />
                   </div>

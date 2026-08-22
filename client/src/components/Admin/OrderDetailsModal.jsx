@@ -22,6 +22,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
             <img
               src={order.imageUrl}
               alt="Reference"
+              loading="lazy"
               className="rounded-xl w-full"
             />
           </div>

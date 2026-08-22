@@ -764,6 +764,7 @@ const balanceAmount =
     <img
       src={previewImage}
       alt="Reference Preview"
+      loading="lazy"
       className="h-64 w-full rounded-xl border border-slate-700 object-cover"
     />
   </div>

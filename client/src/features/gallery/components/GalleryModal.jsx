@@ -30,7 +30,7 @@ export default function GalleryModal({
   if (!artwork) return null;
 
   const currentIndex = artworks.findIndex(
-    (item) => item.id === artwork.id
+    (item) => item._id === artwork._id
   );
 
   const handlePrevious = () => {
@@ -72,8 +72,9 @@ export default function GalleryModal({
           {/* Artwork Image */}
           <div className="h-[500px] bg-black">
             <img
-              src={artwork.image}
+              src={artwork.imageUrl}
               alt={artwork.title}
+              loading="lazy"
               className="h-full w-full object-contain"
             />
           </div>

@@ -8,11 +8,13 @@ export default function About() {
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
         {/* Artist Image Placeholder */}
-        <div className="h-[450px] rounded-3xl bg-slate-800 flex items-center justify-center border border-slate-700">
-          <span className="text-slate-500 text-xl">
-            Artist Image
-          </span>
-        </div>
+        <div className="flex justify-center">
+  <img
+    src="/artist.jpeg"
+    alt="Sundhar Karthick"
+    className="h-[300px] w-[240px] object-cover rounded-3xl border border-slate-700 shadow-xl"
+  />
+</div>
 
         {/* About Content */}
         <div>

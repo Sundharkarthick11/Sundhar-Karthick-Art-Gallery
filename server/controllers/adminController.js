@@ -59,7 +59,25 @@ const loginAdmin = async (req, res) => {
     });
   }
 };
+const User = require("../models/User");
 
+const getDashboardStats = async (req, res) => {
+  try {
+    const totalUsers =
+      await User.countDocuments();
+
+    res.json({
+      success: true,
+      totalUsers,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   loginAdmin,
+  getDashboardStats,
 };

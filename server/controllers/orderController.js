@@ -127,15 +127,33 @@ const order = await Order.create({
 // ===============================
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({
-      createdAt: -1,
-    });
+    const page =
+      Number(req.query.page) || 1;
+
+    const limit =
+      Number(req.query.limit) || 10;
+
+    const totalOrders =
+      await Order.countDocuments();
+
+    const orders = await Order.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
 
     res.json({
       success: true,
       orders,
+      totalOrders,
+      totalPages: Math.ceil(
+        totalOrders / limit
+      ),
+      currentPage: page,
     });
+
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       message: error.message,

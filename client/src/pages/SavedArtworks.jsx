@@ -83,6 +83,7 @@ export default function SavedArtworks() {
                 <img
                   src={artwork.imageUrl}
                   alt={artwork.title}
+                  loading="lazy"
                   className="h-80 w-full object-cover"
                 />
 

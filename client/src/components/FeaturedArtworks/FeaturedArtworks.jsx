@@ -62,6 +62,7 @@ export default function FeaturedArtworks() {
                 <img
                   src={art.imageUrl}
                   alt={art.title}
+                  loading="lazy"
                   className="h-64 w-full object-cover"
                   onError={(e) => {
                     e.target.src =

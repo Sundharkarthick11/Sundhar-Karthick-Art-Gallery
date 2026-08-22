@@ -53,6 +53,7 @@ const TrackingCard = ({ order }) => {
           <img
             src={order.completedImageUrl}
             alt="Completed Portrait"
+            loading="lazy"
             className="w-full max-w-sm rounded-xl border border-green-500"
           />
 

@@ -76,15 +76,15 @@ const fetchSavedArtworks = async () => {
       }
     );
 
-    const data = await response.json();
-
- if (data.success) {
-      setSavedArtworks(
-        data.artworks.map(
-          (art) => art._id
-        )
-      );
-    }
+    if (data.success) {
+  setSavedArtworks(
+    [...new Set(
+      data.artworks.map(
+        (art) => art._id.toString()
+      )
+    )]
+  );
+}
   } catch (error) {
     console.error(error);
   }
@@ -119,12 +119,20 @@ const fetchSavedArtworks = async () => {
     );
 
     const data =
-      await response.json();
+  await response.json();
+
+console.log(
+  "Saved artworks from API:",
+  data.savedArtworks
+);
+
 if (data.success) {
   setSavedArtworks(
-    data.savedArtworks.map((id) =>
-      id.toString()
-    )
+    [...new Set(
+      data.savedArtworks.map((id) =>
+        id.toString()
+      )
+    )]
   );
 }
   } catch (error) {

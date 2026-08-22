@@ -1,4 +1,3 @@
-import axios from "axios";
 
 const OrderCard = ({ order, fetchOrders, onView }) => {
   // ===============================
@@ -11,11 +10,13 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
       : "bg-amber-500/10 text-amber-400 border border-amber-500/20";
 
   const statusColor =
-    order.orderStatus === "Completed"
-      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-      : order.orderStatus === "In Progress"
-      ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-      : "bg-amber-500/10 text-amber-400 border border-amber-500/20";
+  order.orderStatus === "Delivered"
+    ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+    : order.orderStatus === "Completed"
+    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+    : order.orderStatus === "In Progress"
+    ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+    : "bg-amber-500/10 text-amber-400 border border-amber-500/20";
 
   // ===============================
   // DOWNLOAD IMAGE
@@ -110,69 +111,87 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
   // ===============================
 
   const uploadPortrait = async () => {
-    const input = document.createElement("input");
+  const input = document.createElement("input");
 
-    input.type = "file";
-    input.accept = "image/*";
+  input.type = "file";
+  input.accept = "image/*";
 
-    input.click();
+  input.click();
 
-    input.onchange = async (event) => {
-      const file = event.target.files[0];
+  input.onchange = async (event) => {
+    const file = event.target.files[0];
 
-      if (!file) return;
+    if (!file) return;
 
-      try {
-        const imageData = new FormData();
+    try {
+      const token = localStorage.getItem("adminToken");
 
-        imageData.append("file", file);
+      const imageData = new FormData();
 
-        imageData.append(
-          "upload_preset",
-          "sundhar_completed_portraits"
-        );
+      imageData.append("image", file);
 
-        console.log("Uploading completed portrait...");
-
-        const upload = await axios.post(
-          "https://api.cloudinary.com/v1_1/cjep3tky/image/upload",
-          imageData
-        );
-
-        const completedImageUrl = upload.data.secure_url;
-
-        const token = localStorage.getItem("adminToken");
-
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/orders/${order._id}/upload`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              completedImageUrl,
-            }),
-          }
-        );
-
-        const data = await response.json();
-
-        if (data.success) {
-          alert("Completed portrait uploaded successfully!");
-          fetchOrders();
-        } else {
-          alert(
-            data.message || "Failed to save completed portrait."
-          );
+      // Upload to Backend
+      const uploadResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/cloudinary/upload`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: imageData,
         }
-      } catch (error) {
-        console.error(error);
-        alert("Cloudinary Upload Failed");
+      );
+
+      const uploadData =
+        await uploadResponse.json();
+
+      if (!uploadData.success) {
+        alert(
+          uploadData.message ||
+            "Failed to upload image."
+        );
+        return;
       }
-    };
+
+      const completedImageUrl =
+        uploadData.imageUrl;
+
+      // Save URL to Order
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/orders/${order._id}/upload`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type":
+              "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            completedImageUrl,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert(
+          "Completed portrait uploaded successfully!"
+        );
+
+        fetchOrders();
+      } else {
+        alert(
+          data.message ||
+            "Failed to save completed portrait."
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Upload Failed");
+    }
   };
+};
 
   // ===============================
   // DOWNLOAD HANDLERS
@@ -224,6 +243,7 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
               <img
   src={order.imageUrl}
   alt="Customer Reference"
+  loading="lazy"
   onError={(e) => {
     e.target.src =
       "https://placehold.co/600x400?text=Image+Not+Found";
@@ -269,6 +289,7 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
               <img
   src={order.completedImageUrl}
   alt="Completed Portrait"
+  loading="lazy"
   onError={(e) => {
     e.target.src =
       "https://placehold.co/600x400?text=Image+Not+Found";
@@ -504,6 +525,12 @@ const OrderCard = ({ order, fetchOrders, onView }) => {
             >
               Completed
             </button>
+            <button
+  onClick={() => updateStatus("Delivered")}
+  className="rounded-lg border border-purple-500/30 bg-purple-500/10 px-4 py-2 text-sm font-semibold text-purple-400 transition hover:bg-purple-500/20"
+>
+  Delivered
+</button>
 
             <button
               onClick={uploadPortrait}
