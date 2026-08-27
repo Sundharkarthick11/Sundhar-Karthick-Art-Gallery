@@ -125,9 +125,11 @@ const fetchSavedArtworks = async () => {
     const data =
   await response.json();
 
+console.log("FULL RESPONSE:", data);
+console.log("savedArtworks:", data.savedArtworks);
 console.log(
-  "Saved artworks from API:",
-  data.savedArtworks
+  "length:",
+  data.savedArtworks?.length
 );
 
 if (data.success) {

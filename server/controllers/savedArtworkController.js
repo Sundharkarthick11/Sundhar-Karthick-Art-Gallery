@@ -1,5 +1,4 @@
 const User = require("../models/User");
-
 const Artwork = require("../models/Artwork");
 
 const getSavedArtworks = async (req, res) => {
@@ -33,9 +32,17 @@ const toggleSavedArtwork = async (
       req.admin.userId
     );
 
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
     const alreadySaved =
-      user.savedArtworks.includes(
-        artworkId
+      user.savedArtworks.some(
+        (id) =>
+          id.toString() === artworkId
       );
 
     if (alreadySaved) {
@@ -50,12 +57,24 @@ const toggleSavedArtwork = async (
       );
     }
 
+    // Remove duplicates
+    user.savedArtworks = [
+      ...new Set(
+        user.savedArtworks.map((id) =>
+          id.toString()
+        )
+      ),
+    ];
+
     await user.save();
+
+    await user.populate(
+      "savedArtworks"
+    );
 
     res.json({
       success: true,
-      savedArtworks:
-        user.savedArtworks,
+      artworks: user.savedArtworks,
     });
   } catch (error) {
     console.error(error);
