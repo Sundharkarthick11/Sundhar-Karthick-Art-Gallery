@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 export default function OrderPortrait() {
   const [notification, setNotification] = useState("");
+  const [isConnectingPayment, setIsConnectingPayment] = useState(false);
   
   
   const [previewImage, setPreviewImage] = useState(null);
@@ -148,6 +149,7 @@ const handleSubmit = async (e) => {
   if (!validateForm()) {
     return;
   }
+  
   let imageUrl = "";
   let publicId = "";
   console.log("Step 1 - Uploading image...");
@@ -170,6 +172,7 @@ try {
   publicId = upload.data.public_id; 
   console.log("Cloudinary Public ID:", publicId);
   console.log("Step 2 - Image uploaded");
+  setIsConnectingPayment(true);
   console.log("Step 3 - Creating Razorpay Order...");
   const paymentResponse = await fetch(
   `${import.meta.env.VITE_API_URL}/api/payment/create-order`,
@@ -187,6 +190,7 @@ try {
 const paymentData = await paymentResponse.json();
 console.log("Step 4 - Razorpay Order Created", paymentData);
 if (!paymentData.success) {
+  setIsConnectingPayment(false);
   alert("Unable to create payment.");
   return;
 }
@@ -313,6 +317,7 @@ setTimeout(() => {
 
   } catch (error) {
 
+    setIsConnectingPayment(false);
     console.error(error);
 
     alert("Server Error.");
@@ -322,6 +327,7 @@ setTimeout(() => {
 },
   modal: {
   ondismiss: async function () {
+    setIsConnectingPayment(false);
     console.log("Payment cancelled.");
 
     await fetch(`${import.meta.env.VITE_API_URL}/api/cloudinary/delete`, {
@@ -353,7 +359,7 @@ setTimeout(() => {
   },
 };
 console.log("Step 5 - Opening Razorpay...");
-
+setIsConnectingPayment(false);
 const razorpay = new window.Razorpay(options);
 
 razorpay.open();
@@ -364,6 +370,7 @@ return;
 
 } catch (err) {
   console.error(err);
+  setIsConnectingPayment(false);
 
   alert("Failed to upload image.");
 
@@ -431,8 +438,21 @@ const advanceAmount =
 // 60% balance
 const balanceAmount =
   totalPrice - advanceAmount;
+  
   return (
+
     <div className="min-h-screen bg-slate-950 text-white">
+      {isConnectingPayment && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+    <div className="rounded-xl bg-slate-900 px-8 py-6 text-center">
+      <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-amber-400"></div>
+
+      <p className="mt-4 text-white font-medium">
+        Connecting to Razorpay...
+      </p>
+    </div>
+  </div>
+)}
       {notification && (
   <div className="fixed top-5 right-5 z-50 rounded-lg bg-green-600 px-5 py-3 text-white shadow-lg">
     {notification}
