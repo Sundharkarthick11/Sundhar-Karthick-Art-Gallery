@@ -62,8 +62,7 @@ export default function GallerySection() {
 };
 const fetchSavedArtworks = async () => {
   try {
-    const token =
-      localStorage.getItem("userToken");
+    const token = localStorage.getItem("userToken");
 
     if (!token) return;
 
@@ -75,16 +74,21 @@ const fetchSavedArtworks = async () => {
         },
       }
     );
+    
+
+    const data = await response.json();
+
+    console.log("Saved artworks from API:", data.artworks);
 
     if (data.success) {
-  setSavedArtworks(
-    [...new Set(
-      data.artworks.map(
-        (art) => art._id.toString()
-      )
-    )]
-  );
-}
+      setSavedArtworks(
+        [...new Set(
+          data.artworks.map((art) =>
+            String(art._id)
+          )
+        )]
+      );
+    }
   } catch (error) {
     console.error(error);
   }
@@ -128,8 +132,8 @@ console.log(
 
 if (data.success) {
   setSavedArtworks(
-    data.artworks.map(
-      (art) => String(art._id)
+    data.savedArtworks.map((id) =>
+      String(id)
     )
   );
 }
