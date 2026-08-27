@@ -94,18 +94,26 @@ export default function Navbar() {
           ) : (
             <>
               <Link
-                to="/saved-artworks"
-                className="text-slate-200 hover:text-amber-400"
-              >
-                ❤️ Saved
-              </Link>
+  to="/saved-artworks"
+  className={`transition ${
+    location.pathname === "/saved-artworks"
+      ? "text-amber-400"
+      : "text-slate-200 hover:text-amber-400"
+  }`}
+>
+  ❤️ Saved
+</Link>
 
-              <Link
-                to="/account"
-                className="text-slate-200 hover:text-amber-400"
-              >
-                Account
-              </Link>
+<Link
+  to="/account"
+  className={`transition ${
+    location.pathname === "/account"
+      ? "text-amber-400"
+      : "text-slate-200 hover:text-amber-400"
+  }`}
+>
+  Account
+</Link>
 
               <button
                 onClick={handleLogout}
@@ -165,7 +173,11 @@ export default function Navbar() {
                 <Link
                   to="/saved-artworks"
                   onClick={closeMenu}
-                  className="block rounded-lg px-4 py-3 text-slate-200 hover:bg-slate-900 hover:text-amber-400"
+                  className={`block rounded-lg px-4 py-3 transition ${
+  location.pathname === "/saved-artworks"
+    ? "bg-slate-900 text-amber-400"
+    : "text-slate-200 hover:bg-slate-900 hover:text-amber-400"
+}`}
                 >
                   ❤️ Saved Artworks
                 </Link>
@@ -173,7 +185,11 @@ export default function Navbar() {
                 <Link
                   to="/account"
                   onClick={closeMenu}
-                  className="block rounded-lg px-4 py-3 text-slate-200 hover:bg-slate-900 hover:text-amber-400"
+                  className={`block rounded-lg px-4 py-3 transition ${
+  location.pathname === "/account"
+    ? "bg-slate-900 text-amber-400"
+    : "text-slate-200 hover:bg-slate-900 hover:text-amber-400"
+}`}
                 >
                   My Account
                 </Link>
