@@ -134,8 +134,8 @@ console.log(
 
 if (data.success) {
   setSavedArtworks(
-    data.savedArtworks.map((id) =>
-      String(id)
+    data.savedArtworks.map((art) =>
+      String(art._id)
     )
   );
 }
@@ -143,6 +143,12 @@ if (data.success) {
     console.error(error);
   }
 };
+console.log(
+  "Updated saved IDs:",
+  data.savedArtworks.map(
+    (art) => String(art._id)
+  )
+);
 
   const handleSavedClick = () => {
     const user = JSON.parse(
