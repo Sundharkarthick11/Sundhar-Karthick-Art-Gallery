@@ -72,10 +72,12 @@ const toggleSavedArtwork = async (
       "savedArtworks"
     );
 
-    res.json({
-      success: true,
-      artworks: user.savedArtworks,
-    });
+    
+
+res.json({
+  success: true,
+  savedArtworks: user.savedArtworks,
+});
   } catch (error) {
     console.error(error);
 
