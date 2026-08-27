@@ -9,12 +9,7 @@ export default function UserAccount() {
   );
 
   
-  const handleLogout = () => {
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("user");
-
-    navigate("/login");
-  };
+  
   const handleChangePassword = async () => {
   if (
     !currentPassword ||
@@ -111,22 +106,30 @@ const [confirmPassword, setConfirmPassword] =
 
           {/* Profile */}
 
-          <div className="rounded-2xl bg-slate-900 p-8 flex flex-col items-center justify-center text-center">
-  <img
-    src={user.photoURL}
-    alt={user.name}
-    className="h-20 w-20 rounded-full object-cover"
-  />
+          {/* Profile */}
+<div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 flex flex-col items-center justify-center text-center">
 
-  <h3 className="mt-4 text-2xl font-semibold text-white">
+  {user.photoURL ? (
+    <img
+      src={user.photoURL}
+      alt={user.name}
+      className="h-20 w-20 rounded-full object-cover"
+    />
+  ) : (
+    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-500 text-2xl font-bold text-white">
+      {user.name?.charAt(0).toUpperCase()}
+    </div>
+  )}
+
+  <h2 className="mt-4 text-xl font-semibold">
     {user.name}
-  </h3>
+  </h2>
 
-  <p className="mt-2 text-slate-400">
+  <p className="mt-2 text-slate-400 break-all">
     {user.email}
   </p>
-</div>
 
+</div>
           {/* Saved Artworks */}
 
           <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
