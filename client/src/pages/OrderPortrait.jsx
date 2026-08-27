@@ -454,7 +454,7 @@ const balanceAmount =
   </div>
 )}
       {notification && (
-  <div className="fixed top-5 right-5 z-50 rounded-lg bg-green-600 px-5 py-3 text-white shadow-lg">
+  <div className="fixed top-5 right-5 z-50 rounded-lg border border-slate-700 bg-slate-800 px-5 py-3 text-white shadow-lg">
     {notification}
   </div>
 )}
