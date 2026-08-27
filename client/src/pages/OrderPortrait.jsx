@@ -3,6 +3,7 @@ import { useState } from "react";
 export default function OrderPortrait() {
   const [notification, setNotification] = useState("");
   
+  
   const [previewImage, setPreviewImage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [artworkType, setArtworkType] = useState("");
@@ -280,7 +281,11 @@ deliveryAddress:
 
     if (data.success) {
 
-      alert("✅ Payment Successful! Order Confirmed.");
+      setNotification("Payment Successful!");
+
+setTimeout(() => {
+  setNotification("");
+}, 3000);
 
       setFormData({
         customerName: "",
@@ -429,7 +434,7 @@ const balanceAmount =
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       {notification && (
-  <div className="fixed top-5 right-5 z-50 rounded-lg bg-red-600 px-5 py-3 text-white shadow-lg">
+  <div className="fixed top-5 right-5 z-50 rounded-lg bg-green-600 px-5 py-3 text-white shadow-lg">
     {notification}
   </div>
 )}
