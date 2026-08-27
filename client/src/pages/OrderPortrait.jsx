@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 export default function OrderPortrait() {
+  const [notification, setNotification] = useState("");
   
   const [previewImage, setPreviewImage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -328,7 +329,11 @@ deliveryAddress:
       }),
     });
 
-    alert("Payment cancelled. Uploaded image deleted.");
+    setNotification("Payment cancelled.");
+
+setTimeout(() => {
+  setNotification("");
+}, 3000);
   },
 },
 
@@ -347,6 +352,7 @@ console.log("Step 5 - Opening Razorpay...");
 const razorpay = new window.Razorpay(options);
 
 razorpay.open();
+
 
 return;
 
@@ -422,6 +428,11 @@ const balanceAmount =
   totalPrice - advanceAmount;
   return (
     <div className="min-h-screen bg-slate-950 text-white">
+      {notification && (
+  <div className="fixed top-5 right-5 z-50 rounded-lg bg-red-600 px-5 py-3 text-white shadow-lg">
+    {notification}
+  </div>
+)}
       <div className="mx-auto max-w-7xl px-6 py-20">
 
         {/* Hero Section */}
