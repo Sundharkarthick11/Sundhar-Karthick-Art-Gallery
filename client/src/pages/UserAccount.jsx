@@ -28,6 +28,7 @@ export default function UserAccount() {
   try {
     const token =
       localStorage.getItem("userToken");
+    console.log(user);
 
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/api/users/change-password`,
@@ -111,7 +112,7 @@ const [confirmPassword, setConfirmPassword] =
 
   {user.photoURL ? (
     <img
-      src={user.photoURL}
+      src={user.photoURL || user.profileImage}
       alt={user.name}
       className="h-20 w-20 rounded-full object-cover"
     />
