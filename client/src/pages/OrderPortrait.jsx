@@ -63,15 +63,14 @@ const validateForm = () => {
   // Email
   // ===========================
   if (!formData.email.trim()) {
-    newErrors.email = "Please enter your email address.";
-  } else if (
-    !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(
-      formData.email
-    )
-  ) {
-    newErrors.email =
-      "Please enter a valid email address.";
-  }
+  newErrors.email = "Email is required";
+} else if (
+  !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+    formData.email
+  )
+) {
+  newErrors.email = "Enter a valid email address";
+}
 
   // ===========================
   // Phone Number
