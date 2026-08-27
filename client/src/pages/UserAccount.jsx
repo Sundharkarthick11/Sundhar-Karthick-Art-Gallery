@@ -87,26 +87,23 @@ const [confirmPassword, setConfirmPassword] =
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 
-          <div>
-            <p className="uppercase tracking-[0.25em] text-amber-400 text-sm">
-              My Account
-            </p>
+          <div className="rounded-2xl bg-slate-900 p-8 flex flex-col items-center justify-center text-center">
+  <img
+    src={user.photoURL}
+    alt={user.name}
+    className="h-20 w-20 rounded-full object-cover"
+  />
 
-            <h1 className="mt-3 text-4xl md:text-5xl font-bold">
-              Welcome, {user.name}
-            </h1>
+  <h3 className="mt-4 text-2xl font-semibold text-white">
+    {user.name}
+  </h3>
 
-            <p className="mt-2 text-slate-400">
-              {user.email}
-            </p>
-          </div>
+  <p className="mt-2 text-slate-400">
+    {user.email}
+  </p>
+</div>
 
-          <button
-            onClick={handleLogout}
-            className="rounded-lg border border-red-500 px-6 py-3 text-red-400 transition hover:bg-red-500 hover:text-white"
-          >
-            Logout
-          </button>
+          
 
         </div>
 
