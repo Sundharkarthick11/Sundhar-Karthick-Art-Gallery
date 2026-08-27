@@ -32,6 +32,20 @@ export default function GalleryModal({
   const currentIndex = artworks.findIndex(
     (item) => item._id === artwork._id
   );
+  console.log(
+  "Current artwork:",
+  artwork.title
+);
+
+console.log(
+  "Artworks order:",
+  artworks.map((a) => a.title)
+);
+
+console.log(
+  "Current index:",
+  currentIndex
+);
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
