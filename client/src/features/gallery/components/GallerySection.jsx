@@ -202,8 +202,15 @@ if (data.success) {
     </div>
   );
 }
+const modalArtworks =
+  selectedCategory === "All" && !showSavedOnly
+    ? galleryCategories.flatMap((category) =>
+        getCategoryArtworks(category)
+      )
+    : filteredArtworks;
 
   const hasResults = filteredArtworks.length > 0;
+  
 
   return (
     <>
@@ -291,7 +298,7 @@ if (data.success) {
       {/* Modal */}
       <GalleryModal
         artwork={selectedArtwork}
-        artworks={filteredArtworks}
+        artworks={modalArtworks}
         onClose={() => setSelectedArtwork(null)}
         onChangeArtwork={setSelectedArtwork}
       />
