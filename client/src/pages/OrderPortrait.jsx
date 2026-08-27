@@ -685,7 +685,7 @@ const balanceAmount =
 {deliveryMethod === "Post / Courier" && (
   <div className="mt-6">
     <label className="mb-2 block text-sm font-medium text-white">
-      Delivery Address <span className="text-red-400">*</span>
+      Delivery Address
     </label>
 
     <textarea
@@ -778,7 +778,9 @@ const balanceAmount =
 {/* Additional Notes */}
 <div className="border-t border-slate-700 pt-6">
   <h3 className="mb-5 text-xl font-semibold text-amber-400">
-    📝 Additional Notes
+    📝 Additional Notes <span className="text-slate-400 text-sm ml-1">
+    (Optional)
+  </span>
   </h3>
 
   <label className="mb-2 block text-sm font-medium">
@@ -1092,13 +1094,9 @@ const balanceAmount =
 
       <li>
         💰 A <strong>40% advance payment</strong> is required
-        to confirm your order.
+        to confirm your order.The remaining amount can be paid after delivery.
       </li>
 
-      <li>
-        💳 The remaining <strong>60% payment</strong> must be
-        completed before shipping or delivery.
-      </li>
 
       <li>
         📷 Upload a clear, high-resolution reference image for
