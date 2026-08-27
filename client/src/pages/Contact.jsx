@@ -53,14 +53,14 @@ Thank you.`;
 
     // Replace this with your actual WhatsApp number.
     // Use country code without + or spaces.
-    const whatsappNumber = "91XXXXXXXXXX";
+    const whatsappNumber = "919384316129";
 
     const message = encodeURIComponent(buildMessage());
 
     window.open(
-      `https://wa.me/${whatsappNumber}?text=${message}`,
-      "_blank"
-    );
+  `https://wa.me/${whatsappNumber}?text=${message}`,
+  "_blank"
+);
   };
 
   const sendEmail = (e) => {
@@ -69,7 +69,7 @@ Thank you.`;
     if (!validateForm()) return;
 
     // Replace this with your actual gallery email.
-    const emailAddress = "your-email@example.com";
+    const emailAddress = "sundharkarthick03@gmail.com";
 
     const subject = encodeURIComponent(
       formData.subject
@@ -147,9 +147,12 @@ Thank you.`;
                   Email
                 </h3>
 
-                <p className="mt-1 text-slate-400">
-                  sundharkarthick03@gmail.com
-                </p>
+                <a
+  href="mailto:sundharkarthick03@gmail.com"
+  className="mt-1 inline-block text-slate-400 hover:text-amber-400"
+>
+  sundharkarthick03@gmail.com
+</a>
               </div>
 
             </div>
@@ -168,9 +171,14 @@ Thank you.`;
                   WhatsApp
                 </h3>
 
-                <p className="mt-1 text-slate-400">
-                  9384316129
-                </p>
+                <a
+  href="https://wa.me/919384316129"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="mt-1 inline-block text-slate-400 hover:text-amber-400"
+>
+  9384316129
+</a>
               </div>
 
             </div>
