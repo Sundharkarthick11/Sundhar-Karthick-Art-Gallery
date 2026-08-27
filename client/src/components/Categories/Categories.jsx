@@ -1,10 +1,12 @@
 const categories = [
   "Pencil Drawings",
-  "Charcoal Art",
-  "Creative Art",
-  "Sketches",
-  "Digital Art",
   "Portraits",
+  "Family Portraits",
+  "Charcoal Art",
+  "Paintings",
+  "Digital Art",
+  "Creative Art",
+  "Pixel Art",
 ];
 
 export default function Categories() {
@@ -20,7 +22,7 @@ export default function Categories() {
           Browse artworks by your favorite style.
         </p>
 
-        <div className="grid md:grid-cols-3 gap-6 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
 
           {categories.map((category) => (
             <div
