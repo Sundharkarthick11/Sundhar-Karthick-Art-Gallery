@@ -10,16 +10,20 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `"Sundhar Karthick Art Gallery" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
     });
 
-    console.log("✅ Email sent successfully.");
+    console.log("✅ Email sent successfully:", info.messageId);
+
+    return true;
   } catch (error) {
     console.error("❌ Email Error:", error);
+
+    throw error;
   }
 };
 
