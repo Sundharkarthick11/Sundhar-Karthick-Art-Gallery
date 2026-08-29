@@ -7,7 +7,7 @@ export default function UserAccount() {
   const user = JSON.parse(
     localStorage.getItem("user") || "null"
   );
-  console.log(user);
+  console.log("USER DATA:", user);
 
   
   
