@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+
 export default function UserAccount() {
   const navigate = useNavigate();
 
@@ -70,7 +71,14 @@ const [newPassword, setNewPassword] =
 
 const [confirmPassword, setConfirmPassword] =
   useState("");
+const [showCurrentPassword, setShowCurrentPassword] =
+  useState(false);
 
+const [showNewPassword, setShowNewPassword] =
+  useState(false);
+
+const [showConfirmPassword, setShowConfirmPassword] =
+  useState(false);
   if (!user) {
     navigate("/login");
     return null;
@@ -236,27 +244,79 @@ const [confirmPassword, setConfirmPassword] =
         setCurrentPassword(e.target.value)
       }
       className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-    />
+    /><div className="relative">
+  <input
+    type={showCurrentPassword ? "text" : "password"}
+    placeholder="Current Password"
+    value={currentPassword}
+    onChange={(e) =>
+      setCurrentPassword(e.target.value)
+    }
+    className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+  />
 
-    <input
-      type="password"
-      placeholder="New Password"
-      value={newPassword}
-      onChange={(e) =>
-        setNewPassword(e.target.value)
-      }
-      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-    />
+  <button
+    type="button"
+    onClick={() =>
+      setShowCurrentPassword(
+        !showCurrentPassword
+      )
+    }
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400 text-sm"
+  >
+    {showCurrentPassword ? "Hide" : "Show"}
+  </button>
+</div>
 
-    <input
-      type="password"
-      placeholder="Confirm New Password"
-      value={confirmPassword}
-      onChange={(e) =>
-        setConfirmPassword(e.target.value)
-      }
-      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-    />
+    <div className="relative">
+  <input
+    type={showNewPassword ? "text" : "password"}
+    placeholder="New Password"
+    value={newPassword}
+    onChange={(e) =>
+      setNewPassword(e.target.value)
+    }
+    className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+  />
+
+  <button
+    type="button"
+    onClick={() =>
+      setShowNewPassword(!showNewPassword)
+    }
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400 text-sm"
+  >
+    {showNewPassword ? "Hide" : "Show"}
+  </button>
+</div>
+
+    <div className="relative">
+  <input
+    type={
+      showConfirmPassword
+        ? "text"
+        : "password"
+    }
+    placeholder="Confirm New Password"
+    value={confirmPassword}
+    onChange={(e) =>
+      setConfirmPassword(e.target.value)
+    }
+    className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+  />
+
+  <button
+    type="button"
+    onClick={() =>
+      setShowConfirmPassword(
+        !showConfirmPassword
+      )
+    }
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400 text-sm"
+  >
+    {showConfirmPassword ? "Hide" : "Show"}
+  </button>
+</div>
 
     <button
       onClick={handleChangePassword}
