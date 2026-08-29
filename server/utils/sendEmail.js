@@ -3,14 +3,18 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false,
+  secure: false, // true only for 465
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
 
-const sendEmail = async ({ to, subject, html }) => {
+const sendEmail = async ({
+  to,
+  subject,
+  html,
+}) => {
   try {
     const info = await transporter.sendMail({
       from: `"Sundhar Karthick Art Gallery" <${process.env.EMAIL_USER}>`,
@@ -19,13 +23,20 @@ const sendEmail = async ({ to, subject, html }) => {
       html,
     });
 
-    console.log("✅ Email sent successfully:", info.messageId);
+    console.log(
+      "✅ Email sent successfully:",
+      info.messageId
+    );
 
     return true;
   } catch (error) {
-  console.error("❌ Email Error:", error);
-  throw error;
-}
+    console.error(
+      "❌ Email Error:",
+      error
+    );
+
+    return false;
+  }
 };
 
 module.exports = sendEmail;
