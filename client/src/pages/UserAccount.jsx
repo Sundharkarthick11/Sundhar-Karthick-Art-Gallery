@@ -22,6 +22,8 @@ export default function UserAccount() {
     alert("Please fill all fields.");
     return;
   }
+console.log("New:", newPassword);
+console.log("Confirm:", confirmPassword);
 
   if (newPassword !== confirmPassword) {
     alert("Passwords do not match.");
