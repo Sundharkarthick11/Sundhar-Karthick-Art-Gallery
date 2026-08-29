@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 
 export default function UserAccount() {
@@ -234,100 +235,94 @@ const [showConfirmPassword, setShowConfirmPassword] =
     Update your account password securely.
   </p>
 
-  <div className="mt-6 space-y-4">
+<div className="mt-6 space-y-4">
 
+  {/* Current Password */}
+  <div className="relative">
     <input
-      type="password"
+      type={showCurrentPassword ? "text" : "password"}
       placeholder="Current Password"
       value={currentPassword}
       onChange={(e) =>
         setCurrentPassword(e.target.value)
       }
       className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-    /><div className="relative">
-  <input
-    type={showCurrentPassword ? "text" : "password"}
-    placeholder="Current Password"
-    value={currentPassword}
-    onChange={(e) =>
-      setCurrentPassword(e.target.value)
-    }
-    className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-  />
-
-  <button
-    type="button"
-    onClick={() =>
-      setShowCurrentPassword(
-        !showCurrentPassword
-      )
-    }
-    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400 text-sm"
-  >
-    {showCurrentPassword ? "Hide" : "Show"}
-  </button>
-</div>
-
-    <div className="relative">
-  <input
-    type={showNewPassword ? "text" : "password"}
-    placeholder="New Password"
-    value={newPassword}
-    onChange={(e) =>
-      setNewPassword(e.target.value)
-    }
-    className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-  />
-
-  <button
-    type="button"
-    onClick={() =>
-      setShowNewPassword(!showNewPassword)
-    }
-    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400 text-sm"
-  >
-    {showNewPassword ? "Hide" : "Show"}
-  </button>
-</div>
-
-    <div className="relative">
-  <input
-    type={
-      showConfirmPassword
-        ? "text"
-        : "password"
-    }
-    placeholder="Confirm New Password"
-    value={confirmPassword}
-    onChange={(e) =>
-      setConfirmPassword(e.target.value)
-    }
-    className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-  />
-
-  <button
-    type="button"
-    onClick={() =>
-      setShowConfirmPassword(
-        !showConfirmPassword
-      )
-    }
-    className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400 text-sm"
-  >
-    {showConfirmPassword ? "Hide" : "Show"}
-  </button>
-</div>
+    />
 
     <button
-      onClick={handleChangePassword}
-      className="rounded-lg bg-amber-500 px-6 py-3 font-semibold text-white hover:bg-amber-600"
+      type="button"
+      onClick={() =>
+        setShowCurrentPassword(
+          !showCurrentPassword
+        )
+      }
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400"
     >
-      Update Password
+      👁️
     </button>
-
   </div>
 
+  {/* New Password */}
+  <div className="relative">
+    <input
+      type={showNewPassword ? "text" : "password"}
+      placeholder="New Password"
+      value={newPassword}
+      onChange={(e) =>
+        setNewPassword(e.target.value)
+      }
+      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+    />
+
+    <button
+      type="button"
+      onClick={() =>
+        setShowNewPassword(!showNewPassword)
+      }
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400"
+    >
+      👁️
+    </button>
+  </div>
+
+  {/* Confirm Password */}
+  <div className="relative">
+    <input
+      type={
+        showConfirmPassword
+          ? "text"
+          : "password"
+      }
+      placeholder="Confirm New Password"
+      value={confirmPassword}
+      onChange={(e) =>
+        setConfirmPassword(e.target.value)
+      }
+      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+    />
+
+    <button
+      type="button"
+      onClick={() =>
+        setShowConfirmPassword(
+          !showConfirmPassword
+        )
+      }
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400"
+    >
+      👁️
+    </button>
+  </div>
+
+  <button
+    onClick={handleChangePassword}
+    className="rounded-lg bg-amber-500 px-6 py-3 font-semibold text-white hover:bg-amber-600"
+  >
+    Update Password
+  </button>
+
 </div>
+  </div>
 
       </div>
     </div>
