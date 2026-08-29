@@ -42,7 +42,10 @@ export default function UserSignup() {
       return;
     }
 
-    if (formData.password !== confirmPassword) {
+    if (
+      formData.password.trim() !==
+      confirmPassword.trim()
+    ) {
       setError("Passwords do not match.");
       return;
     }
@@ -68,7 +71,10 @@ export default function UserSignup() {
         return;
       }
 
-      localStorage.setItem("userToken", data.token);
+      localStorage.setItem(
+        "userToken",
+        data.token
+      );
 
       localStorage.setItem(
         "user",
@@ -87,7 +93,6 @@ export default function UserSignup() {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center px-6">
       <div className="w-full max-w-md bg-slate-900 p-8 rounded-2xl">
-
         <h1 className="text-3xl font-bold text-center">
           Create Account
         </h1>
@@ -124,63 +129,73 @@ export default function UserSignup() {
 
           {/* Password */}
           <div className="relative">
-  <input
-    type={showPassword ? "text" : "password"}
-    name="password"
-    placeholder="Password"
-    value={formData.password}
-    onChange={handleChange}
-    required
-    className="w-full p-3 rounded-lg bg-slate-800"
-  />
+            <input
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
+              }
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="w-full p-3 rounded-lg bg-slate-800"
+            />
 
-  <button
-    type="button"
-    onClick={() =>
-      setShowPassword(!showPassword)
-    }
-    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
-  >
-    {showPassword ? (
-      <FaEyeSlash size={18} />
-    ) : (
-      <FaEye size={18} />
-    )}
-  </button>
-</div>
+            <button
+              type="button"
+              onClick={() =>
+                setShowPassword(
+                  !showPassword
+                )
+              }
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
+            >
+              {showPassword ? (
+                <FaEyeSlash size={18} />
+              ) : (
+                <FaEye size={18} />
+              )}
+            </button>
+          </div>
 
           {/* Confirm Password */}
           <div className="relative">
-  <input
-    type={
-      showConfirmPassword
-        ? "text"
-        : "password"
-    }
-    name="confirmPassword"
-    placeholder="Confirm Password"
-    value={formData.confirmPassword}
-    onChange={handleChange}
-    required
-    className="w-full p-3 rounded-lg bg-slate-800"
-  />
+            <input
+              type={
+                showConfirmPassword
+                  ? "text"
+                  : "password"
+              }
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) =>
+                setConfirmPassword(
+                  e.target.value
+                )
+              }
+              required
+              className="w-full p-3 rounded-lg bg-slate-800"
+            />
 
-  <button
-    type="button"
-    onClick={() =>
-      setShowConfirmPassword(
-        !showConfirmPassword
-      )
-    }
-    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
-  >
-    {showConfirmPassword ? (
-      <FaEyeSlash size={18} />
-    ) : (
-      <FaEye size={18} />
-    )}
-  </button>
-</div>
+            <button
+              type="button"
+              onClick={() =>
+                setShowConfirmPassword(
+                  !showConfirmPassword
+                )
+              }
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
+            >
+              {showConfirmPassword ? (
+                <FaEyeSlash size={18} />
+              ) : (
+                <FaEye size={18} />
+              )}
+            </button>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -205,7 +220,6 @@ export default function UserSignup() {
             Login
           </Link>
         </p>
-
       </div>
     </div>
   );
