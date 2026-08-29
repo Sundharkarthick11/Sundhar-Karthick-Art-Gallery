@@ -111,17 +111,17 @@ const [confirmPassword, setConfirmPassword] =
           {/* Profile */}
 <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 flex flex-col items-center justify-center text-center">
 
-  {user.photoURL ? (
-    <img
-      src={user.photoURL || user.profileImage}
-      alt={user.name}
-      className="h-20 w-20 rounded-full object-cover"
-    />
-  ) : (
-    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-500 text-2xl font-bold text-white">
-      {user.name?.charAt(0).toUpperCase()}
-    </div>
-  )}
+ {(user.profileImage || user.photoURL) ? (
+  <img
+    src={user.profileImage || user.photoURL}
+    alt={user.name}
+    className="h-20 w-20 rounded-full object-cover"
+  />
+) : (
+  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-500 text-2xl font-bold text-white">
+    {user.name?.charAt(0).toUpperCase()}
+  </div>
+)}
 
   <h2 className="mt-4 text-xl font-semibold">
     {user.name}
