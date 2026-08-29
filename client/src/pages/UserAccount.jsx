@@ -7,6 +7,7 @@ export default function UserAccount() {
   const user = JSON.parse(
     localStorage.getItem("user") || "null"
   );
+  console.log(user);
 
   
   
@@ -15,7 +16,7 @@ export default function UserAccount() {
     !currentPassword ||
     !newPassword ||
     !confirmPassword
-  ) {
+  ) {c
     alert("Please fill all fields.");
     return;
   }
@@ -28,7 +29,7 @@ export default function UserAccount() {
   try {
     const token =
       localStorage.getItem("userToken");
-    console.log(user);
+    
 
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/api/users/change-password`,
