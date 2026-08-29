@@ -105,25 +105,32 @@ const forgotPassword = async (req, res) => {
     const resetUrl =
       `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-    await sendEmail({
-      to: user.email,
-      subject: "Reset Your Password",
-      html: `
-      <h2>Password Reset</h2>
+    const emailResult = await sendEmail({
+  to: user.email,
+  subject: "Reset Your Password",
+  html: `
+    <h2>Password Reset</h2>
 
-      <p>
-      Click the link below to reset your password:
-      </p>
+    <p>
+    Click the link below to reset your password:
+    </p>
 
-      <a href="${resetUrl}">
-      Reset Password
-      </a>
+    <a href="${resetUrl}">
+    Reset Password
+    </a>
 
-      <p>
-      This link expires in 15 minutes.
-      </p>
-      `,
-    });
+    <p>
+    This link expires in 15 minutes.
+    </p>
+  `,
+});
+
+if (!emailResult.success) {
+  return res.status(500).json({
+    success: false,
+    message: "Failed to send reset email.",
+  });
+}
 
     res.json({
       success: true,

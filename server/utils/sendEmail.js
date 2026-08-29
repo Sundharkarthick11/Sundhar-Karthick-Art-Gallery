@@ -1,49 +1,36 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // true only for 465
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 });
-transporter.verify(function (error, success) {
-  if (error) {
-    console.log("SMTP ERROR:", error);
-  } else {
-    console.log("SMTP READY");
-  }
-});
 
-const sendEmail = async ({
-  to,
-  subject,
-  html,
-}) => {
+const sendEmail = async ({ to, subject, html }) => {
   try {
     const info = await transporter.sendMail({
-      from: `"Sundhar Karthick Art Gallery" <${process.env.EMAIL_USER}>`,
+      from: `"Sundhar Karthick Art Gallery" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html,
     });
 
-    console.log(
-      "✅ Email sent successfully:",
-      info.messageId
-    );
+    console.log("✅ Email sent:", info.messageId);
 
-    return true;
+    return {
+      success: true,
+    };
   } catch (error) {
-    console.error(
-      "❌ Email Error:",
-      error
-    );
+    console.error("❌ Email Error:", error);
 
-    return false;
+    return {
+      success: false,
+      error: error.message,
+    };
   }
 };
 
