@@ -18,7 +18,7 @@ export default function UserAccount() {
     !currentPassword ||
     !newPassword ||
     !confirmPassword
-  ) {c
+  ) {
     alert("Please fill all fields.");
     return;
   }
@@ -250,73 +250,85 @@ const [showConfirmPassword, setShowConfirmPassword] =
     />
 
     <button
-      type="button"
-      onClick={() =>
-        setShowCurrentPassword(
-          !showCurrentPassword
-        )
-      }
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400"
-    >
-      👁️
-    </button>
+  type="button"
+  onClick={() =>
+    setShowCurrentPassword(
+      !showCurrentPassword
+    )
+  }
+  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
+>
+  {showCurrentPassword ? (
+    <FaEyeSlash size={18} />
+  ) : (
+    <FaEye size={18} />
+  )}
+</button>
   </div>
 
   {/* New Password */}
   <div className="relative">
-    <input
-      type={showNewPassword ? "text" : "password"}
-      placeholder="New Password"
-      value={newPassword}
-      onChange={(e) =>
-        setNewPassword(e.target.value)
-      }
-      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-    />
+  <input
+    type={showNewPassword ? "text" : "password"}
+    placeholder="New Password"
+    value={newPassword}
+    onChange={(e) =>
+      setNewPassword(e.target.value)
+    }
+    className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+  />
 
-    <button
-      type="button"
-      onClick={() =>
-        setShowNewPassword(!showNewPassword)
-      }
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400"
-    >
-      👁️
-    </button>
-  </div>
+  <button
+    type="button"
+    onClick={() =>
+      setShowNewPassword(!showNewPassword)
+    }
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
+  >
+    {showNewPassword ? (
+      <FaEyeSlash size={18} />
+    ) : (
+      <FaEye size={18} />
+    )}
+  </button>
+</div>
 
   {/* Confirm Password */}
-  <div className="relative">
-    <input
-      type={
-        showConfirmPassword
-          ? "text"
-          : "password"
-      }
-      placeholder="Confirm New Password"
-      value={confirmPassword}
-      onChange={(e) =>
-        setConfirmPassword(e.target.value)
-      }
-      className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
-    />
+ <div className="relative">
+  <input
+    type={
+      showConfirmPassword
+        ? "text"
+        : "password"
+    }
+    placeholder="Confirm New Password"
+    value={confirmPassword}
+    onChange={(e) =>
+      setConfirmPassword(e.target.value)
+    }
+    className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+  />
 
-    <button
-      type="button"
-      onClick={() =>
-        setShowConfirmPassword(
-          !showConfirmPassword
-        )
-      }
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-400"
-    >
-      👁️
-    </button>
-  </div>
+  <button
+    type="button"
+    onClick={() =>
+      setShowConfirmPassword(
+        !showConfirmPassword
+      )
+    }
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
+  >
+    {showConfirmPassword ? (
+      <FaEyeSlash size={18} />
+    ) : (
+      <FaEye size={18} />
+    )}
+  </button>
+</div>
 
   <button
     onClick={handleChangePassword}
-    className="rounded-lg bg-amber-500 px-6 py-3 font-semibold text-white hover:bg-amber-600"
+    className="w-full rounded-lg bg-amber-500 py-3 font-semibold text-white hover:bg-amber-600"
   >
     Update Password
   </button>
