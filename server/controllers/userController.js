@@ -447,14 +447,21 @@ const changePassword = async (
     } = req.body;
 
     const user = await User.findById(
-      req.user.userId
-    );
+  req.user.userId
+);
 
-    const isMatch =
-      await bcrypt.compare(
-        currentPassword,
-        user.password
-      );
+if (!user.password) {
+  return res.status(400).json({
+    success: false,
+    message: "This account uses Google Sign-In.",
+  });
+}
+
+const isMatch =
+  await bcrypt.compare(
+    currentPassword,
+    user.password
+  );
 
     if (!isMatch) {
       return res.status(400).json({
