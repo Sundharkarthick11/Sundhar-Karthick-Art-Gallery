@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function UserSignup() {
   const navigate = useNavigate();
@@ -123,63 +124,63 @@ export default function UserSignup() {
 
           {/* Password */}
           <div className="relative">
-            <input
-              type={
-                showPassword ? "text" : "password"
-              }
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full p-3 rounded-lg bg-slate-800"
-            />
+  <input
+    type={showPassword ? "text" : "password"}
+    name="password"
+    placeholder="Password"
+    value={formData.password}
+    onChange={handleChange}
+    required
+    className="w-full p-3 rounded-lg bg-slate-800"
+  />
 
-            <button
-              type="button"
-              onClick={() =>
-                setShowPassword(!showPassword)
-              }
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-amber-400"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
-          </div>
+  <button
+    type="button"
+    onClick={() =>
+      setShowPassword(!showPassword)
+    }
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
+  >
+    {showPassword ? (
+      <FaEyeSlash size={18} />
+    ) : (
+      <FaEye size={18} />
+    )}
+  </button>
+</div>
 
           {/* Confirm Password */}
           <div className="relative">
-            <input
-              type={
-                showConfirmPassword
-                  ? "text"
-                  : "password"
-              }
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) =>
-                setConfirmPassword(
-                  e.target.value
-                )
-              }
-              required
-              className="w-full p-3 rounded-lg bg-slate-800"
-            />
+  <input
+    type={
+      showConfirmPassword
+        ? "text"
+        : "password"
+    }
+    name="confirmPassword"
+    placeholder="Confirm Password"
+    value={formData.confirmPassword}
+    onChange={handleChange}
+    required
+    className="w-full p-3 rounded-lg bg-slate-800"
+  />
 
-            <button
-              type="button"
-              onClick={() =>
-                setShowConfirmPassword(
-                  !showConfirmPassword
-                )
-              }
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-amber-400"
-            >
-              {showConfirmPassword
-                ? "Hide"
-                : "Show"}
-            </button>
-          </div>
-
+  <button
+    type="button"
+    onClick={() =>
+      setShowConfirmPassword(
+        !showConfirmPassword
+      )
+    }
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-amber-400"
+  >
+    {showConfirmPassword ? (
+      <FaEyeSlash size={18} />
+    ) : (
+      <FaEye size={18} />
+    )}
+  </button>
+</div>
           <button
             type="submit"
             disabled={loading}
