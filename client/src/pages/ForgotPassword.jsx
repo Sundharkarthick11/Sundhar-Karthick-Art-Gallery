@@ -2,6 +2,8 @@ import { useState } from "react";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,14 +23,19 @@ export default function ForgotPassword() {
       const data = await response.json();
 
       if (data.success) {
-        alert("Password reset email sent.");
+        setSuccess(true);
+        setMessage(
+          "Password reset link has been sent to your email. Please check your inbox."
+        );
         setEmail("");
       } else {
-        alert(data.message);
+        setSuccess(false);
+        setMessage(data.message);
       }
     } catch (error) {
       console.error(error);
-      alert("Server error");
+      setSuccess(false);
+      setMessage("Server error. Please try again.");
     }
   };
 
@@ -46,6 +53,18 @@ export default function ForgotPassword() {
           Enter your email to receive a reset link.
         </p>
 
+        {message && (
+          <div
+            className={`mt-4 rounded-lg px-4 py-3 text-sm ${
+              success
+                ? "bg-green-500/10 text-green-400 border border-green-500/30"
+                : "bg-red-500/10 text-red-400 border border-red-500/30"
+            }`}
+          >
+            {message}
+          </div>
+        )}
+
         <input
           type="email"
           placeholder="Email Address"
@@ -57,9 +76,15 @@ export default function ForgotPassword() {
 
         <button
           type="submit"
-          className="w-full mt-6 bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-lg font-semibold"
+          className={`w-full mt-6 py-3 rounded-lg font-semibold text-white transition ${
+            success
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-amber-500 hover:bg-amber-600"
+          }`}
         >
-          Send Reset Link
+          {success
+            ? "Reset Link Sent ✓"
+            : "Send Reset Link"}
         </button>
       </form>
     </div>
