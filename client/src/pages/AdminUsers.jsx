@@ -22,53 +22,55 @@ const AdminUsers = () => {
   }, []);
 
   const fetchUsers = async () => {
-    try {
-      const token = localStorage.getItem("adminToken");
+  try {
+    const token = localStorage.getItem("adminToken");
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/users`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        setUsers(data.users);
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/users/all`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    );
 
+    const data = await response.json();
+
+    console.log("Users API:", data);
+
+    if (data.success) {
+      setUsers(data.users || []);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
   const fetchOrders = async () => {
-    try {
-      const token = localStorage.getItem("adminToken");
+  try {
+    const token = localStorage.getItem("adminToken");
 
-      const response = await fetch(
-  `${import.meta.env.VITE_API_URL}/api/users/all`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        setOrders(data.orders);
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/orders?page=1&limit=1000`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    );
 
+    const data = await response.json();
+
+    console.log("Orders API:", data);
+
+    if (data.success) {
+      setOrders(data.orders || []);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
   const monthlyData = Object.entries(
-    orders.reduce((acc, order) => {
+  (orders || []).reduce((acc, order) => {
       const date = new Date(order.createdAt);
 
       const month = `${date.toLocaleString("default", {
@@ -84,7 +86,7 @@ const AdminUsers = () => {
     orders,
   }));
 
-  const categoryData = orders.reduce(
+  const categoryData = (orders || []).reduce(
     (acc, order) => {
       const type = order.artworkType || "Unknown";
 
