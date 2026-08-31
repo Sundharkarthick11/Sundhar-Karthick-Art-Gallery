@@ -6,6 +6,17 @@ const loginAdmin = async (req, res) => {
     const { email, password } = req.body;
 
     const adminEmail = process.env.ADMIN_EMAIL;
+    const allowedAdmin =
+  "sundharkarthick03@gmail.com";
+
+if (
+  email.toLowerCase() !== allowedAdmin
+) {
+  return res.status(403).json({
+    success: false,
+    message: "Access denied.",
+  });
+}
     const adminPassword = process.env.ADMIN_PASSWORD;
 
     // Debug logs
@@ -45,10 +56,11 @@ const loginAdmin = async (req, res) => {
     console.log("✅ Login Successful");
 
     res.status(200).json({
-      success: true,
-      message: "Login successful.",
-      token,
-    });
+  success: true,
+  message: "Login successful.",
+  token,
+  adminEmail: email,
+});
 
   } catch (error) {
     console.error("Admin Login Error:", error);

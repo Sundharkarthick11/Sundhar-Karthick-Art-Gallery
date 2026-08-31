@@ -1,11 +1,28 @@
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("adminToken");
+const ProtectedRoute = ({
+  children,
+}) => {
+  const token =
+    localStorage.getItem("adminToken");
+
+  const adminEmail =
+    localStorage.getItem("adminEmail");
+
+  
 
   if (!token) {
-    return <Navigate to="/admin/login" replace />;
+    return (
+      <Navigate to="/admin/login" />
+    );
   }
+
+ if (
+  adminEmail?.toLowerCase() !==
+  "sundharkarthick03@gmail.com"
+) {
+  return <Navigate to="/" />;
+}
 
   return children;
 };

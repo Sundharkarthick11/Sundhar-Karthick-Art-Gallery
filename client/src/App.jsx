@@ -47,7 +47,11 @@ export default function App() {
 />
 <Route
   path="/admin/users"
-  element={<AdminUsers />}
+  element={
+    <ProtectedRoute>
+      <AdminUsers />
+    </ProtectedRoute>
+  }
 />
           <Route
             path="/gallery"

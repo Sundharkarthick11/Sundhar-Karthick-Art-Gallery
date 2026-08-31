@@ -42,6 +42,10 @@ const AdminLogin = () => {
 
       if (data.success) {
         localStorage.setItem("adminToken", data.token);
+        localStorage.setItem(
+  "adminEmail",
+  data.adminEmail
+);
 
         alert("Login Successful!");
 
