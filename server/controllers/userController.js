@@ -495,6 +495,28 @@ const isMatch =
     });
   }
 };
+// ==========================================
+// GET ALL USERS
+// ==========================================
+
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({})
+      .select("name email createdAt googleId");
+
+    res.json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   signup,
@@ -505,4 +527,5 @@ module.exports = {
   changePassword,
   forgotPassword,
   resetPassword,
+  getAllUsers,
 };

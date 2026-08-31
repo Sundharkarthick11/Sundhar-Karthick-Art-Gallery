@@ -9,14 +9,16 @@ const {
   changePassword,
   forgotPassword,
   resetPassword,
+  getAllUsers,
 } = require("../controllers/userController");
 
 const userProtect = require(
   "../middleware/userAuthMiddleware"
 );
 
-const router = express.Router();
 
+const router = express.Router();
+router.get("/all", getAllUsers);
 router.post("/signup", signup);
 
 router.post("/login", login);
