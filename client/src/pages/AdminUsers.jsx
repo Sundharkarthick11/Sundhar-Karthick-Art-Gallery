@@ -49,7 +49,7 @@ const AdminUsers = () => {
       const token = localStorage.getItem("adminToken");
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/orders?page=1&limit=1000`,
+  `${import.meta.env.VITE_API_URL}/api/users/all`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
