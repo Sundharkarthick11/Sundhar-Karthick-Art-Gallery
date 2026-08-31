@@ -4,15 +4,6 @@ import { useNavigate } from "react-router-dom";
 import DashboardStats from "../components/Admin/DashboardStats";
 import OrderCard from "../components/Admin/OrderCard";
 import OrderDetailsModal from "../components/Admin/OrderDetailsModal";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -20,94 +11,66 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
+
   const [totalUsers, setTotalUsers] = useState(0);
+
   const [page, setPage] = useState(1);
-  const [users, setUsers] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
 
-const [totalPages, setTotalPages] =
-  useState(1);
+  useEffect(() => {
+    fetchOrders();
+  }, [page]);
 
- useEffect(() => {
-  fetchOrders();
-}, [page]);
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
-useEffect(() => {
-  fetchStats();
-  fetchUsers();
-}, []);
   const fetchOrders = async () => {
-  try {
-    const token = localStorage.getItem("adminToken");
+    try {
+      const token = localStorage.getItem("adminToken");
 
-    const response = await fetch(
-  `${import.meta.env.VITE_API_URL}/api/orders?page=${page}&limit=10`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/orders?page=${page}&limit=10`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setOrders(data.orders);
+        setTotalPages(data.totalPages || 1);
       }
-    );
-
-    const data = await response.json();
-
-    if (data.success) {
-  setOrders(data.orders);
-
-  setTotalPages(
-    data.totalPages || 1
-  );
-}else {
-      console.log(data.message);
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
-const fetchStats = async () => {
-  try {
-    const token =
-      localStorage.getItem("adminToken");
+  };
 
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/admin/stats`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  const fetchStats = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/admin/stats`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setTotalUsers(data.totalUsers);
       }
-    );
-
-    const data = await response.json();
-
-    if (data.success) {
-      setTotalUsers(data.totalUsers);
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
-const fetchUsers = async () => {
-  try {
-    const token = localStorage.getItem("adminToken");
-
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/users`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.success) {
-      setUsers(data.users);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
+  };
 
   const logout = () => {
     localStorage.removeItem("adminToken");
@@ -121,42 +84,6 @@ const fetchUsers = async () => {
         .includes(search.toLowerCase())
     );
   }, [orders, search]);
-
-  const monthlyData = Object.entries(
-  orders.reduce((acc, order) => {
-    const date = new Date(order.createdAt);
-
-    const month =
-      `${date.toLocaleString("default", {
-        month: "short",
-      })} ${date.getFullYear()}`;
-
-    acc[month] = (acc[month] || 0) + 1;
-
-    return acc;
-  }, {})
-).map(([month, orders]) => ({
-  month,
-  orders,
-}));
-
-const categoryData = orders.reduce(
-  (acc, order) => {
-    const type =
-      order.artworkType || "Unknown";
-
-    acc[type] = (acc[type] || 0) + 1;
-
-    return acc;
-  },
-  {}
-);
-
-const maxCategoryCount =
-  Math.max(
-    ...Object.values(categoryData),
-    1
-  );
 
   return (
     <div className="min-h-screen bg-gray-900 text-white px-6 py-8">
@@ -176,22 +103,28 @@ const maxCategoryCount =
 
         <div className="flex gap-3">
 
-  <button
-    onClick={() => navigate("/admin/artworks")}
-    className="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg text-black font-semibold transition"
-  >
-    Manage Artworks
-  </button>
+          <button
+            onClick={() => navigate("/admin/users")}
+            className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-lg font-semibold"
+          >
+            Users Analytics
+          </button>
 
-  <button
-    onClick={logout}
-    className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg text-white font-semibold transition"
-  >
-    Logout
-  </button>
+          <button
+            onClick={() => navigate("/admin/artworks")}
+            className="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg text-black font-semibold"
+          >
+            Manage Artworks
+          </button>
 
-</div>
+          <button
+            onClick={logout}
+            className="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg font-semibold"
+          >
+            Logout
+          </button>
 
+        </div>
       </div>
 
       {/* Search */}
@@ -205,118 +138,15 @@ const maxCategoryCount =
         />
       </div>
 
-      {/* Dashboard Statistics */}
+      {/* Dashboard Stats */}
       <DashboardStats
-  orders={orders}
-  totalUsers={totalUsers}
-/>
-<div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-  {/* Monthly Orders Analysis */}
-  <div className="mt-8 rounded-xl border border-slate-700 bg-slate-800/80 p-6">
-  <h2 className="text-xl font-bold text-white mb-5">
-    📊 Monthly Orders Chart
-  </h2>
-
-  <div style={{ width: "100%", height: 300 }}>
-    <ResponsiveContainer>
-      <BarChart data={monthlyData}>
-        <CartesianGrid strokeDasharray="3 3" />
-
-        <XAxis
-  dataKey="month"
-  angle={-30}
-  textAnchor="end"
-  height={70}
-/>
-
-        <YAxis />
-
-        <Tooltip />
-
-        <Bar
-  dataKey="orders"
-  fill="#f59e0b"
-  radius={[6, 6, 0, 0]}
-/>
-      </BarChart>
-    </ResponsiveContainer>
-  </div>
-</div>
-
-  {/* Artwork Category Analysis */}
-  <div className="rounded-xl border border-slate-700 bg-slate-800/80 p-6">
-    <h2 className="text-xl font-bold text-white mb-5">
-      🎨 Artwork Category Analysis
-    </h2>
-
-    {Object.entries(categoryData).map(([type, count]) => (
-      <div key={type} className="mb-4">
-        <div className="flex justify-between mb-1">
-          <span>{type}</span>
-          <span>{count}</span>
-        </div>
-
-        <div className="h-3 bg-slate-700 rounded">
-          <div
-            className="h-3 bg-emerald-500 rounded"
-            sstyle={{
-  width: `${
-    (count / maxCategoryCount) * 100
-  }%`,
-}}
-          />
-        </div>
-      </div>
-    ))}
-  </div>
-
-</div>
-{/* Registered Users */}
-
-<div className="mt-10 rounded-xl border border-slate-700 bg-slate-800/80 p-6">
-  <h2 className="text-xl font-bold text-white mb-5">
-    👥 Registered Users
-  </h2>
-
-  <div className="overflow-x-auto">
-    <table className="w-full text-left">
-      <thead>
-        <tr className="border-b border-slate-700">
-          <th className="py-3">Name</th>
-          <th className="py-3">Email</th>
-          <th className="py-3">Joined</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {users.map((user) => (
-          <tr
-            key={user._id}
-            className="border-b border-slate-700"
-          >
-            <td className="py-3">
-              {user.name}
-            </td>
-
-            <td className="py-3">
-              {user.email}
-            </td>
-
-            <td className="py-3">
-              {new Date(
-                user.createdAt
-              ).toLocaleDateString()}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
+        orders={orders}
+        totalUsers={totalUsers}
+      />
 
       {/* Orders */}
       <div className="mt-10 space-y-6">
+
         {filteredOrders.length > 0 ? (
           filteredOrders.map((order) => (
             <OrderCard
@@ -331,37 +161,35 @@ const maxCategoryCount =
             No orders found.
           </div>
         )}
+
       </div>
 
+      {/* Pagination */}
       <div className="mt-10 flex items-center justify-center gap-4">
 
-  <button
-    disabled={page === 1}
-    onClick={() =>
-      setPage(page - 1)
-    }
-    className="rounded-lg bg-slate-700 px-4 py-2 disabled:opacity-50"
-  >
-    Previous
-  </button>
+        <button
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+          className="rounded-lg bg-slate-700 px-4 py-2 disabled:opacity-50"
+        >
+          Previous
+        </button>
 
-  <span className="font-semibold">
-    Page {page} of {totalPages}
-  </span>
+        <span className="font-semibold">
+          Page {page} of {totalPages}
+        </span>
 
-  <button
-    disabled={page === totalPages}
-    onClick={() =>
-      setPage(page + 1)
-    }
-    className="rounded-lg bg-slate-700 px-4 py-2 disabled:opacity-50"
-  >
-    Next
-  </button>
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage(page + 1)}
+          className="rounded-lg bg-slate-700 px-4 py-2 disabled:opacity-50"
+        >
+          Next
+        </button>
 
-</div>
+      </div>
 
-      {/* Order Details Modal */}
+      {/* Modal */}
       {selectedOrder && (
         <OrderDetailsModal
           order={selectedOrder}

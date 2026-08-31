@@ -23,6 +23,7 @@ import OrderPortrait from "./pages/OrderPortrait";
 
 import TrackOrder from "./pages/TrackOrder";
 import SavedArtworks from "./pages/SavedArtworks";
+import AdminUsers from "./pages/AdminUsers";
 
 export default function App() {
   return (
@@ -44,7 +45,10 @@ export default function App() {
   path="/signup"
   element={<UserSignup />}
 />
-
+<Route
+  path="/admin/users"
+  element={<AdminUsers />}
+/>
           <Route
             path="/gallery"
             element={<Gallery />}
