@@ -27,7 +27,7 @@ transporter.verify((error, success) => {
 const sendEmail = async ({ to, subject, html }) => {
   try {
     const info = await transporter.sendMail({
-      from: `"Sundhar Karthick Art Gallery" <${process.env.SMTP_USER}>`,
+      from: '"Sundhar Karthick Art Gallery" <sundharkarthick03@gmail.com>',
       to,
       subject,
       html,
