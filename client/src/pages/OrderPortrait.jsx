@@ -270,7 +270,8 @@ deliveryAddress:
 
   try {
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("userToken");
+    console.log("TOKEN =", token);
 
 const saveResponse = await fetch(
   `${import.meta.env.VITE_API_URL}/api/orders`,
@@ -284,8 +285,11 @@ const saveResponse = await fetch(
   }
 );
 
-    const data = await saveResponse.json();
+    console.log("Status =", saveResponse.status);
 
+const data = await saveResponse.json();
+
+console.log("Order API Response =", data);
     if (data.success) {
 
       setNotification("Payment Successful!");
@@ -314,7 +318,8 @@ setTimeout(() => {
 
     } else {
 
-      alert("Failed to save order.");
+       console.log(data);
+   alert(data.message || "Failed to save order.");
 
     }
 
@@ -332,6 +337,7 @@ setTimeout(() => {
   ondismiss: async function () {
     setIsConnectingPayment(false);
     console.log("Payment cancelled.");
+    console.log("Sending Order Data =", orderData);
 
     await fetch(`${import.meta.env.VITE_API_URL}/api/cloudinary/delete`, {
       method: "POST",
