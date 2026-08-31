@@ -45,14 +45,7 @@ export default function App() {
   path="/signup"
   element={<UserSignup />}
 />
-<Route
-  path="/admin/users"
-  element={
-    <ProtectedRoute>
-      <AdminUsers />
-    </ProtectedRoute>
-  }
-/>
+
           <Route
             path="/gallery"
             element={<Gallery />}
@@ -115,15 +108,35 @@ export default function App() {
 <Route
   path="/harthick23"
   element={<AdminLogin />}
+ />
+
+<Route
+  path="/harthick23/dashboard"
+  element={
+    <ProtectedRoute>
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
 />
-        <Route
-  path="/admin/artworks"
+
+<Route
+  path="/harthick23/users"
+  element={
+    <ProtectedRoute>
+      <AdminUsers />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/harthick23/artworks"
   element={
     <ProtectedRoute>
       <AdminArtworks />
     </ProtectedRoute>
   }
 />
+        
 <Route
   path="/forgot-password"
   element={<ForgotPassword />}
@@ -133,21 +146,6 @@ export default function App() {
   path="/reset-password/:token"
   element={<ResetPassword />}
 />
-
-
-        {/* ========================================= */}
-        {/* ADMIN DASHBOARD */}
-        {/* No Customer Navbar */}
-        {/* ========================================= */}
-
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
 
       </Routes>
     </BrowserRouter>

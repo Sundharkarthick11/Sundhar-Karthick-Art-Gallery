@@ -49,7 +49,7 @@ const AdminLogin = () => {
 
         alert("Login Successful!");
 
-        navigate("/admin");
+        navigate("/harthick23/dashboard");
       } else {
         alert(data.message);
       }

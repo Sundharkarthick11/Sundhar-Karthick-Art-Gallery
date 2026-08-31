@@ -106,7 +106,7 @@ const AdminUsers = () => {
         </h1>
 
         <button
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate("/harthick23/dashboard")}
           className="bg-slate-700 px-4 py-2 rounded-lg"
         >
           Back Dashboard

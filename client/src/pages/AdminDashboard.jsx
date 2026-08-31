@@ -73,9 +73,10 @@ const AdminDashboard = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem("adminToken");
-    navigate("/admin/login");
-  };
+  localStorage.removeItem("adminToken");
+  localStorage.removeItem("adminEmail");
+  navigate("/harthick23");
+};
 
   const filteredOrders = useMemo(() => {
     return orders.filter((order) =>
@@ -104,14 +105,14 @@ const AdminDashboard = () => {
         <div className="flex gap-3">
 
           <button
-            onClick={() => navigate("/admin/users")}
+            onClick={() => navigate("/harthick23/users")}
             className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-lg font-semibold"
           >
             Users Analytics
           </button>
 
           <button
-            onClick={() => navigate("/admin/artworks")}
+            onClick={() => navigate("/harthick23/artworks")}
             className="bg-amber-500 hover:bg-amber-600 px-5 py-2 rounded-lg text-black font-semibold"
           >
             Manage Artworks
