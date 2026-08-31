@@ -363,6 +363,23 @@ const uploadCompletedPortrait = async (req, res) => {
       </div>
       `,
     });
+    await sendEmail({
+  to: process.env.ADMIN_EMAIL,
+  subject: `🆕 New Order Received - ${order.orderId}`,
+  html: `
+    <h2>New Order Received</h2>
+
+    <p><strong>Order ID:</strong> ${order.orderId}</p>
+    <p><strong>Customer Name:</strong> ${order.customerName}</p>
+    <p><strong>Email:</strong> ${order.email}</p>
+
+    <p><strong>Artwork:</strong> ${order.artworkType}</p>
+    <p><strong>Paper Size:</strong> ${order.paperSize}</p>
+
+    <p><strong>Estimated Price:</strong> ₹${order.estimatedPrice}</p>
+    <p><strong>Advance Amount:</strong> ₹${order.advanceAmount}</p>
+  `,
+});
 
     res.json({
       success: true,
