@@ -112,11 +112,10 @@ export default function App() {
         {/* ADMIN LOGIN */}
         {/* No Customer Navbar */}
         {/* ========================================= */}
-
-        <Route
-          path="/admin/login"
-          element={<AdminLogin />}
-        />
+<Route
+  path="/harthick23"
+  element={<AdminLogin />}
+/>
         <Route
   path="/admin/artworks"
   element={

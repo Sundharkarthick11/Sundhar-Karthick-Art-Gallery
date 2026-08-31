@@ -12,9 +12,7 @@ const ProtectedRoute = ({
   
 
   if (!token) {
-    return (
-      <Navigate to="/admin/login" />
-    );
+   return <Navigate to="/harthick23" />;
   }
 
  if (
