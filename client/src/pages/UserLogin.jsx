@@ -69,7 +69,7 @@ export default function UserLogin() {
         JSON.stringify(data.user)
       );
 
-      navigate("/account");
+      navigate("/");
     } catch (error) {
       console.error("Login Error:", error);
       setError(
@@ -119,7 +119,7 @@ export default function UserLogin() {
         JSON.stringify(data.user)
       );
 
-      navigate("/account");
+      navigate("/");
     } catch (error) {
       console.error("Google Login Error:", error);
 
