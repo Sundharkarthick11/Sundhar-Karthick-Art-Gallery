@@ -22,6 +22,7 @@ const AdminDashboard = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [totalUsers, setTotalUsers] = useState(0);
   const [page, setPage] = useState(1);
+  const [users, setUsers] = useState([]);
 
 const [totalPages, setTotalPages] =
   useState(1);
@@ -32,8 +33,8 @@ const [totalPages, setTotalPages] =
 
 useEffect(() => {
   fetchStats();
+  fetchUsers();
 }, []);
-
   const fetchOrders = async () => {
   try {
     const token = localStorage.getItem("adminToken");
@@ -80,6 +81,28 @@ const fetchStats = async () => {
 
     if (data.success) {
       setTotalUsers(data.totalUsers);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+const fetchUsers = async () => {
+  try {
+    const token = localStorage.getItem("adminToken");
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/users`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      setUsers(data.users);
     }
   } catch (error) {
     console.error(error);
@@ -248,6 +271,48 @@ const maxCategoryCount =
     ))}
   </div>
 
+</div>
+{/* Registered Users */}
+
+<div className="mt-10 rounded-xl border border-slate-700 bg-slate-800/80 p-6">
+  <h2 className="text-xl font-bold text-white mb-5">
+    👥 Registered Users
+  </h2>
+
+  <div className="overflow-x-auto">
+    <table className="w-full text-left">
+      <thead>
+        <tr className="border-b border-slate-700">
+          <th className="py-3">Name</th>
+          <th className="py-3">Email</th>
+          <th className="py-3">Joined</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {users.map((user) => (
+          <tr
+            key={user._id}
+            className="border-b border-slate-700"
+          >
+            <td className="py-3">
+              {user.name}
+            </td>
+
+            <td className="py-3">
+              {user.email}
+            </td>
+
+            <td className="py-3">
+              {new Date(
+                user.createdAt
+              ).toLocaleDateString()}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 </div>
 
       {/* Orders */}
